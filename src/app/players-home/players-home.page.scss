@@ -1,0 +1,36 @@
+:root{
+  --ion-color-light: #ffffff;
+	
+}
+
+ion-toolbar{
+    --background: #ffff
+}
+
+.custom-header {
+  background-color: #ffff; /* Prilagodite boju hedera po želji */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.title-right {
+  margin-right: 20px; /* Prilagodite razmak od ivice po potrebi */
+  font-size: 22px;
+  color: black;
+}
+
+img{
+  height: 50px;
+  width: 100px;
+  margin: 10px;
+}
+
+ion-title {
+  margin-left: 10px;
+}
+
+strong{
+  font-size: 35px;
+  line-height: 35px;
+  color: black;
+}

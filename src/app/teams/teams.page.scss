@@ -1,0 +1,81 @@
+:root{
+  --ion-color-light: #ffffff;
+	
+}
+
+ion-toolbar{
+    --background: #ffff
+}
+
+.custom-header {
+  background-color: #ffff; /* Prilagodite boju hedera po želji */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.title-right {
+  margin-right: 20px; /* Prilagodite razmak od ivice po potrebi */
+  font-size: 22px;
+  color: black;
+}
+
+img{
+  height: 50px;
+  width: 100px;
+  margin: 10px;
+}
+
+ion-title {
+  margin-left: 10px;
+}
+
+strong{
+  font-size: 35px;
+  line-height: 35px;
+  color: black;
+}
+ion-content{
+  --background: #ffff;
+}
+
+ion-item {
+  margin-bottom: 15px;
+  --background: #ffff;
+  color: black;
+  font-size: 22px;
+}
+
+ion-header{
+    --background: #ffff;
+}
+
+ion-label {
+  font-size: 24px;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 10px;
+  color: black;
+  background-color: #ffff;
+}
+
+ion-input {
+  padding-top: 10px;
+  margin-top: 10px;
+  font-size: 24px;
+}
+
+ion-button {
+  font-size: 24px;
+
+}
+
+.welcome{
+  margin-top: 170px;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}

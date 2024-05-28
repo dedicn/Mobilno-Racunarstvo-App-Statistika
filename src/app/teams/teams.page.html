@@ -1,0 +1,80 @@
+<!-- <div class="custom-header">
+  <ion-buttons>
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  <strong>Timovi</strong>
+  <div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/FIBA-3x3-Logo-black.jpg" alt="">
+  </div>
+</div> -->
+<ion-header [translucent]="true">
+  <ion-toolbar class="custom-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="title-right">Timovi</ion-title>
+
+    <ion-buttons slot="end">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/FIBA-3x3-Logo-black.jpg" alt="3x3" class="small-image">
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center">
+  <div class="welcome">
+    <strong style="margin: 10px;">Unesite imena timova koji igraju</strong>
+  </div>
+  <form (ngSubmit)="onAddTeams()" #f="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Unesite ime domaćeg tima:</ion-label>
+            <ion-input
+              type="text"
+              [(ngModel)]="home"
+              name="home"
+              required
+              minlength="3"
+            ></ion-input>
+          </ion-item>
+          <div *ngIf="f.submitted && f.controls['home']?.errors?.['minlength']">
+            <p class="error-message">Ime domaćeg tima mora da ima minimum 3 karaktera.</p>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Unesite ime gostujućeg tima:</ion-label>
+            <ion-input
+              type="text"
+              [(ngModel)]="guest"
+              name="guest"
+              required
+              minlength="3"
+            ></ion-input>
+          </ion-item>
+          <div *ngIf="f.submitted && f.controls['guest']?.errors?.['minlength']">
+            <p class="error-message">Ime gostujućeg tima mora da ima minimum 3 karaktera.</p>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-button
+            type="submit"
+            color="primary"
+            expand="block"
+            [disabled]="!f.valid"
+          >
+            Sačuvaj timove
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

@@ -6,6 +6,8 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { PlayerViewComponent } from './player-view/player-view.component'; 
+import { PlayerInputFormComponent } from './player-input-form/player-input-form.component';
 
 @NgModule({
   declarations: [AppComponent],

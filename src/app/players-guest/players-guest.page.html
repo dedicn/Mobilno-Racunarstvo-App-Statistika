@@ -1,0 +1,15 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="custom-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="title-right">Gosti</ion-title>
+    <ion-buttons slot="end">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/FIBA-3x3-Logo-black.jpg" alt="3x3" class="small-image">
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-player-input-form team="guest" [players]="playersGuest"></app-player-input-form>
+</ion-content>

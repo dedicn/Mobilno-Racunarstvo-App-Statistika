@@ -1,20 +1,39 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+<ion-content class="ion-text-center">
+  <div class="welcome">
+    <strong>Dobrodošli na turnir</strong>
   </div>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/FIBA-3x3-Logo-black.jpg" alt="3x3" class="centered-image">
+  <form (ngSubmit)="onAddGame()" #f="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Unesite kod utakmice</ion-label>
+            <ion-input
+              type="text"
+              [(ngModel)]="gameCode"
+              name="gameCode"
+              required
+              minlength="6"
+            ></ion-input>
+          </ion-item>
+          <div *ngIf="f.submitted && f.controls['gameCode']?.errors?.['minlength']">
+            <p class="error-message">Kod utakmice mora imati najmanje 6 znakova.</p>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-button
+            type="submit"
+            color="primary"
+            expand="block"
+            [disabled]="!f.valid"
+          >
+            Započni
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

@@ -1,0 +1,67 @@
+<ion-content class="ion-text-center">
+  <div class="welcome">
+    <p style="margin: 10px; color: black; font-size: 20px;">Unesite imena, prezimena i brojeve dresova igrača {{ team === 'home' ? 'domaćeg' : 'gostujućeg' }} tima</p>
+  </div>
+
+  <form (ngSubmit)="onAddPlayer()" #playerForm="ngForm" class="player-form">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="floating">Ime</ion-label>
+            <ion-input 
+            type="text" 
+            [(ngModel)]="player.name" 
+            name="name" 
+            required>
+          </ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="floating">Prezime</ion-label>
+            <ion-input 
+            type="text" 
+            [(ngModel)]="player.surname" 
+            name="surname" 
+            required>
+          </ion-input>
+          </ion-item>
+        </ion-col>
+        </ion-row>
+        <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="floating">Broj Dresa</ion-label>
+            <ion-input 
+            type="number" 
+            [(ngModel)]="player.number" 
+            name="number" 
+            required></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6" class="ion-align-self-center">
+          <ion-button 
+          type="submit" 
+          color="primary" 
+          [disabled]="!playerForm.valid"
+          >
+          Dodaj
+        </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+
+  <ion-list>
+    <ion-item *ngFor="let player of players">
+      <app-player-view style="width: 100%;" [players]="player" (deletePlayer)="onDeletePlayer(player)"></app-player-view>
+    </ion-item>
+  </ion-list>
+
+
+  <ion-button expand="full" (click)="navigateToPage()">
+    {{team == 'home' ? 'Unesi igrače gostujućeg tima' : 'Započni utakmicu'}}
+  </ion-button>
+</ion-content>
+

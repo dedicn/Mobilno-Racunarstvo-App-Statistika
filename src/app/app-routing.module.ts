@@ -11,6 +11,22 @@ const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+  {
+    path: 'teams',
+    loadChildren: () => import('./teams/teams.module').then( m => m.TeamsPageModule)
+  },
+  {
+    path: 'players',
+    loadChildren: () => import('./players/players.module').then( m => m.PlayersPageModule)
+  },
+  {
+    path: 'players-home',
+    loadChildren: () => import('./players-home/players-home.module').then( m => m.PlayersHomePageModule)
+  },
+  {
+    path: 'players-guest',
+    loadChildren: () => import('./players-guest/players-guest.module').then( m => m.PlayersGuestPageModule)
+  },
 ];
 
 @NgModule({
