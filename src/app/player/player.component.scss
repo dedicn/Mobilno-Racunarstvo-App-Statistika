@@ -1,0 +1,62 @@
+
+.player {
+  display: flex;
+  background-color: #a59f9f;
+  justify-content: space-between; 
+  align-items: center; 
+  width: 100%; 
+}
+
+.components {
+  //flex: 1; 
+  text-align: center;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+}
+
+.number {
+  width: 50px;
+}
+
+.name, .surname {
+  flex-grow: 1; 
+}
+
+.help{
+  display: flex;
+  justify-content: row;
+  width: 100%;
+}
+
+.help p{
+  color: black;
+}
+
+.numberDiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(194, 178, 85);
+  width: 63px;
+  height: 63px;
+  margin-right: 17px;
+  border-radius: .5em;
+}
+
+.numberDiv p{
+  font-size: 25px;
+}
+
+.componennts p{
+    font-size: 20px;
+}
+
+ion-item{
+    --background: #a59f9f;
+    border-radius: .5em;
+    margin-bottom: 10px;
+    width: 80%;
+}

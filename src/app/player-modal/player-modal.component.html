@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title color="light" style="font-size: 18px;">#{{player.number}} {{player.name}} {{player.surname}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <p style="color: black; margin-left: 20px;font-size: 18px;">Odaberite sta zelite da unesete igracu:</p>
+  <div class="button-grid">
+    <ion-row>
+  <ion-col><ion-button color="primary" (click)="updateStat('assists', 1)">+ Assist</ion-button></ion-col>
+  <ion-col><ion-button color="danger" (click)="updateStat('fauls', 1)">+ Faul</ion-button></ion-col>
+</ion-row>
+<ion-row>
+  <ion-col><ion-button color="warning" (click)="updateStat('onePM', 1)">+ 1 Point</ion-button></ion-col>
+  <ion-col><ion-button color="secondary" (click)="updateStat('twoPM', 1)">+ 2 Points</ion-button></ion-col>
+</ion-row>
+<ion-row>
+  <ion-col><ion-button style="--color: #eaf08d;" (click)="updateStat('onePA', 1)">Miss 1 Point</ion-button></ion-col>
+  <ion-col><ion-button color="dark" (click)="updateStat('twoPA', 1)">Miss 2 Points</ion-button></ion-col>
+</ion-row>
+<ion-row>
+  <ion-col><ion-button color="success" (click)="updateStat('DREB', 1)">Def. Rebound</ion-button></ion-col>
+  <ion-col><ion-button color="medium" (click)="updateStat('OREB', 1)">Off. Rebound</ion-button></ion-col>
+</ion-row>
+  </div>
+
+  <p style="color: black; margin-left: 20px;font-size: 18px;">Brisanje statistike</p>
+  <div class="button-grid">
+    <ion-row>
+  <ion-col><ion-button color="primary" (click)="updateStat('assists', -1)">- Assist</ion-button></ion-col>
+  <ion-col><ion-button color="danger" (click)="updateStat('fauls', -1)">- Faul</ion-button></ion-col>
+</ion-row>
+<ion-row>
+  <ion-col><ion-button color="warning" (click)="updateStat('onePM', -1)">- 1 Point</ion-button></ion-col>
+  <ion-col><ion-button color="secondary" (click)="updateStat('twoPM', -2)">- 2 Points</ion-button></ion-col>
+</ion-row>
+<ion-row>
+  <ion-col><ion-button style="--color: #eaf08d;" (click)="updateStat('onePA', -1)">- Miss 1 Point</ion-button></ion-col>
+  <ion-col><ion-button color="dark" (click)="updateStat('twoPA', -1)">- Miss 2 Points</ion-button></ion-col>
+</ion-row>
+<ion-row>
+  <ion-col><ion-button color="success" (click)="updateStat('DREB', -1)">- Def. Rebound</ion-button></ion-col>
+  <ion-col><ion-button color="medium" (click)="updateStat('OREB', -1)">- Off. Rebound</ion-button></ion-col>
+</ion-row>
+
+  </div>
+</ion-content>
+

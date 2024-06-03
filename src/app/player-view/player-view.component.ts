@@ -1,11 +1,8 @@
 import { OnInit } from '@angular/core';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-
-interface Player {
-  name: string;
-  surname: string;
-  number: number | null;
-}
+import { Player } from '../player.model';
+import { GameService } from '../game.service';
+import { PlayerStats } from '../player-stats.model';
 
 @Component({
   selector: 'app-player-view',
@@ -13,9 +10,28 @@ interface Player {
   styleUrls: ['./player-view.component.scss'],
 })
 export class PlayerViewComponent implements OnInit {
-  constructor() {}
+  constructor(private gameService: GameService) {}
 
-  @Input() players: Player = { name: '', surname: '', number: 0 };
+  gameStats: PlayerStats = {
+    game: this.gameService.getGame(),
+    fauls: 0,
+    assists: 0,
+    onePM: 0,
+    twoPM: 0,
+    onePA: 0,
+    twoPA: 0,
+    OREB: 0,
+    DREB: 0,
+  };
+
+  @Input() players: Player = {
+    id: '',
+    name: '',
+    surname: '',
+    number: 0,
+    stats: this.gameStats,
+    team: this.gameService.getTeam('home'),
+  };
   @Output() deletePlayer = new EventEmitter<void>();
 
   onDelete() {

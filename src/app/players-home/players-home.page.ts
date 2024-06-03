@@ -1,13 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PlayerService } from '../players-service.service';
 import { Subscription } from 'rxjs';
-
-
-interface Player {
-  name: string;
-  surname: string;
-  number: number | null;
-}
+import { Player } from '../player.model';
 
 @Component({
   selector: 'app-players-home',
@@ -15,7 +9,6 @@ interface Player {
   styleUrls: ['./players-home.page.scss'],
 })
 export class PlayersHomePage implements OnInit {
-  // playersHome = this.playerService.playersHome;
   playersHome: Player[] = [];
   playersSubs: Subscription = new Subscription;
 

@@ -1,6 +1,6 @@
 <ion-content class="ion-text-center">
   <div class="welcome">
-    <p style="margin: 10px; color: black; font-size: 20px;">Unesite imena, prezimena i brojeve dresova igrača {{ team === 'home' ? 'domaćeg' : 'gostujućeg' }} tima</p>
+    <p style="margin: 10px; color: black; font-size: 20px; margin-top: 25px;">Unesite imena, prezimena i brojeve dresova igrača {{ team === 'home' ? 'domaćeg' : 'gostujućeg' }} tima</p>
   </div>
 
   <form (ngSubmit)="onAddPlayer()" #playerForm="ngForm" class="player-form">
@@ -52,15 +52,15 @@
       </ion-row>
     </ion-grid>
   </form>
-
+<!-- <div class="help"> -->
   <ion-list>
     <ion-item *ngFor="let player of players">
       <app-player-view style="width: 100%;" [players]="player" (deletePlayer)="onDeletePlayer(player)"></app-player-view>
     </ion-item>
   </ion-list>
-
-
-  <ion-button expand="full" (click)="navigateToPage()">
+<!-- </div> -->
+<!-- style="margin-top: 390px;" -->
+  <ion-button (click)="navigateToPage()" style="margin-top: 10px;">
     {{team == 'home' ? 'Unesi igrače gostujućeg tima' : 'Započni utakmicu'}}
   </ion-button>
 </ion-content>

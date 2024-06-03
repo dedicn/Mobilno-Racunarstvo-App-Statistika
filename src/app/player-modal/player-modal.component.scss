@@ -1,0 +1,34 @@
+.button-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+ion-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-around; /* Ensures buttons are spaced out evenly */
+}
+
+ion-col {
+  flex: 1;
+  display: flex;
+  justify-content: center; /* Center align the button horizontally */
+}
+
+ion-button {
+  flex: 1;
+  max-width: 200px; /* Adjust width as needed */
+  height: 40px; /* Adjust height as needed */
+  margin: 5px; /* Adds some spacing between buttons */
+  text-align: center;
+  font-size: 18px;
+}
+
+ion-toolbar{
+    --background: #fff;
+}
+
+
+ion-content{
+    --background: #fff;
+}

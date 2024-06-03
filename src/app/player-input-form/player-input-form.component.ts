@@ -2,12 +2,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { PlayerService } from '../players-service.service';
 import { Router } from '@angular/router';
-
-interface Player {
-  name: string;
-  surname: string;
-  number: number | null;
-}
+import { Player } from '../player.model';
+import { GameService } from '../game.service';
+import { PlayerStats } from '../player-stats.model';
 
 @Component({
   selector: 'app-player-input-form',
@@ -17,25 +14,28 @@ interface Player {
 export class PlayerInputFormComponent {
   @Input() team: 'home' | 'guest' = 'home';
   @Input() players: Player[] = [];
-  // @Output() playersChange = new EventEmitter<Player[]>();
 
   constructor(
     private alertController: AlertController,
     private playerService: PlayerService,
+    private gameService: GameService,
     private router: Router
   ) {}
 
   player: Player = {
+    id: '',
     name: '',
     surname: '',
     number: null,
+    stats: null,
+    team: this.gameService.getTeam('home'),
   };
   maxPlayers: number = 4;
 
   async presentAlert() {
     const alert = await this.alertController.create({
       header: 'Greška',
-      message: 'Tim može da čini maksimalno 4 igrača!',
+      message: 'Tim mora da čini minimalno 3, a maksimalno 4 igrača!',
       buttons: ['OK'],
     });
 
@@ -44,31 +44,31 @@ export class PlayerInputFormComponent {
 
   onAddPlayer() {
     if (this.players.length < this.maxPlayers) {
-      // this.players.push({ ...this.player });
       this.playerService.addPlayer(this.team, { ...this.player });
+      this.playerService.savePlayerToDB(this.player).subscribe();
 
       this.player.name = '';
       this.player.surname = '';
       this.player.number = null;
-
-      // this.playersChange.emit(this.players);
     } else {
       this.presentAlert();
     }
   }
 
   onDeletePlayer(playerToDelete: Player) {
-    // this.players = this.players.filter((player) => player !== playerToDelete);
     this.playerService.deletePlayer(this.team, playerToDelete);
-    // this.playersChange.emit(this.players);
   }
 
-  navigateToPage(){
-    if(this.team == 'home'){
-      this.router.navigateByUrl('playersGuest');
-    }else{
-      //TODO: promeni ovo na utakmicu samu da se prebaci
-      this.router.navigateByUrl('/');
+  navigateToPage() {
+    if (this.players.length >= 3 && this.players.length <= 4) {
+      if (this.team == 'home') {
+        this.router.navigateByUrl('players-guest');
+      } else {
+        //this.playerService.updateAllPlayersInDB().subscribe();
+        this.router.navigateByUrl('game');
+      }
+    } else {
+      this.presentAlert();
     }
   }
 }

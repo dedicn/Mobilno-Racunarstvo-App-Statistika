@@ -1,0 +1,105 @@
+<ion-content class="ion-text-center">
+
+  <div>
+    <p style="font-size: 20px;">Domaci {{homePoints}} : {{guestPoints}} Gosti</p>
+  </div>
+
+  <div style="width: 100%;">
+    <p style="font-size: 18px;">Statistika domaceg tima: {{game.home.name}}</p>
+  <ion-grid class="table-grid">
+  <ion-row>
+    <ion-col size="1.5" class="column-label">Fauls</ion-col>
+    <ion-col size="1.5" class="column-label">Assists</ion-col>
+    <ion-col size="1.3" class="column-label">1PM</ion-col>
+    <ion-col size="1.3" class="column-label">1PA</ion-col>
+    <ion-col size="1.3" class="column-label">2PM</ion-col>
+    <ion-col size="1.3" class="column-label">2PA</ion-col>
+    <ion-col size="1.5" class="column-label">OREB</ion-col>
+    <ion-col size="1.5" class="column-label">DREB</ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col size="1.5" class="column-label">{{ gameStats.faulsHome }}</ion-col>
+    <ion-col size="1.5" class="column-label">{{ gameStats.assistsHome }}</ion-col>
+    <ion-col size="1.3" class="column-label">{{ gameStats.onePMHome }}</ion-col>
+    <ion-col size="1.3" class="column-label">{{ gameStats.onePAHome }}</ion-col>
+    <ion-col size="1.3" class="column-label">{{ gameStats.twoPMHome }}</ion-col>
+    <ion-col size="1.3" class="column-label">{{ gameStats.twoPAHome }}</ion-col>
+    <ion-col size="1.5" class="column-label">{{ gameStats.OREBHome }}</ion-col>
+    <ion-col size="1.5" class="column-label">{{ gameStats.DREBHome }}</ion-col>
+  </ion-row>
+</ion-grid>
+
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6"><p style="font-size: 18px;">Broj tajmauta domaci: {{gameStats.TOHome}}</p></ion-col>
+      <ion-col>
+        <ion-button (click)="addTO('home')">Dodaj tajmaut</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  </div>
+
+
+  <div style="width: 100%;">
+    <p style="font-size: 18px;">Statistika gostujuceg tima: {{game.guest.name}}</p>
+  <ion-grid class="table-grid">
+  <ion-row>
+    <ion-col size="1.5" class="column-label">Fauls</ion-col>
+    <ion-col size="1.5" class="column-label">Assists</ion-col>
+    <ion-col size="1.3" class="column-label">1PM</ion-col>
+    <ion-col size="1.3" class="column-label">1PA</ion-col>
+    <ion-col size="1.3" class="column-label">2PM</ion-col>
+    <ion-col size="1.3" class="column-label">2PA</ion-col>
+    <ion-col size="1.5" class="column-label">OREB</ion-col>
+    <ion-col size="1.5" class="column-label">DREB</ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col size="1.5" class="column-label">{{ gameStats.faulsGuest }}</ion-col>
+    <ion-col size="1.5" class="column-label">{{ gameStats.assistsGuest }}</ion-col>
+    <ion-col size="1.3" class="column-label">{{ gameStats.onePMGuest }}</ion-col>
+    <ion-col size="1.3" class="column-label">{{ gameStats.onePAGuest }}</ion-col>
+    <ion-col size="1.3" class="column-label">{{ gameStats.twoPMGuest }}</ion-col>
+    <ion-col size="1.3" class="column-label">{{ gameStats.twoPAGuest }}</ion-col>
+    <ion-col size="1.5" class="column-label">{{ gameStats.OREBGuest }}</ion-col>
+    <ion-col size="1.5" class="column-label">{{ gameStats.DREBGuest }}</ion-col>
+  </ion-row>
+</ion-grid>
+
+<ion-grid>
+    <ion-row>
+      <ion-col size="6"><p style="font-size: 18px;">Broj tajmauta gosti: {{gameStats.TOGuest}}</p></ion-col>
+      <ion-col>
+        <ion-button (click)="addTO('guest')">Dodaj tajmaut</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  </div>
+
+  <p>Domaci</p>
+  <div>
+    <ion-list >
+    <ion-item *ngFor="let player of playersHome; let i = index">
+      <app-player  [index] = "i+1" [player] = "player" style="width: 100%;" (playerClicked)="openPlayerModal(player, 'home')"></app-player>
+    </ion-item>
+  </ion-list>
+  </div>
+
+  <p>Gosti</p>
+  <div>
+    <ion-list>
+    <ion-item *ngFor="let player of playersGuest; let i = index">
+      <app-player [index] = "i+1" [player] = "player" style="width: 100%;" (playerClicked)="openPlayerModal(player, 'guest')"></app-player>
+    </ion-item>
+  </ion-list>
+  </div>
+
+  <div style="margin-top: 15px;">
+    <ion-button (click)="confirmeDeliteGame()">Obriši utakmicu</ion-button>
+  <ion-button color="danger" (click)="confirmEndGame()">Završi utakmicu</ion-button>
+</div>
+</ion-content>

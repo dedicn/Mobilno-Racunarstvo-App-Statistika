@@ -1,0 +1,48 @@
+.winner {
+  background-color: green;
+  color: rgb(0, 0, 0);
+  font-size: 23px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+.loser {
+  background-color: red;
+  color: rgb(0, 0, 0);
+  font-size: 23px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+ion-button {
+  font-size: 24px;
+  width: 90%;
+  margin-left: 20px;
+}
+
+ion-toolbar{
+  --background: #fff;
+}
+
+
+ion-item{
+  --background: #fff;
+}
+
+ion-list{
+  --background: #fff;
+}
+
+ion-grid{
+  --background: #fff;
+}
+
+ion-content{
+  --background: #fff;
+}
+
+.stats{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

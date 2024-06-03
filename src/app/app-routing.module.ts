@@ -16,16 +16,24 @@ const routes: Routes = [
     loadChildren: () => import('./teams/teams.module').then( m => m.TeamsPageModule)
   },
   {
-    path: 'players',
-    loadChildren: () => import('./players/players.module').then( m => m.PlayersPageModule)
-  },
-  {
     path: 'players-home',
     loadChildren: () => import('./players-home/players-home.module').then( m => m.PlayersHomePageModule)
   },
   {
     path: 'players-guest',
     loadChildren: () => import('./players-guest/players-guest.module').then( m => m.PlayersGuestPageModule)
+  },
+  {
+    path: 'game',
+    loadChildren: () => import('./game/game.module').then( m => m.GamePageModule)
+  },
+  {
+    path: 'instruction',
+    loadChildren: () => import('./instruction/instruction.module').then( m => m.InstructionPageModule)
+  },
+  {
+    path: 'overall-stats',
+    loadChildren: () => import('./overall-stats/overall-stats.module').then( m => m.OverallStatsPageModule)
   },
 ];
 

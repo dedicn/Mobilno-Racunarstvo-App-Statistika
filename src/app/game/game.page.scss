@@ -1,0 +1,57 @@
+.column-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+ion-button{
+  font-size: 18px;
+}
+
+ion-content{
+    --background: #ffff;
+    --color: black
+}
+
+.table-grid {
+  border-collapse: collapse;
+  width: 100%;
+  margin-left: 13px;
+}
+
+.table-grid ion-col {
+  border: 1px solid #000;
+}
+
+.table-grid .column-label {
+  text-align: center;
+}
+
+ion-list{
+  --background: #a59f9f;
+}
+
+ion-list ion-item{
+  margin-bottom: 0;
+}
+
+ion-item{
+    --background: #ffff;
+
+}
+
+.player-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.player-number {
+  margin-right: 10px; /* dodajemo prostor između broja i igrača */
+}
+
+
+// .player-item {
+//   width: 80%;
+// }
