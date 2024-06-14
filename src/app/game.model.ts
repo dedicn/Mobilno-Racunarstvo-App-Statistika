@@ -1,3 +1,4 @@
+import { GameStats } from "./game-stats.model";
 import { Team } from "./team.model";
 
 export interface Game {
@@ -8,4 +9,5 @@ export interface Game {
   guestPoints: number;
   home: Team;
   guest: Team;
+  stats: GameStats | null;
 }

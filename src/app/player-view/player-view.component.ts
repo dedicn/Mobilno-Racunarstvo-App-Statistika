@@ -13,7 +13,6 @@ export class PlayerViewComponent implements OnInit {
   constructor(private gameService: GameService) {}
 
   gameStats: PlayerStats = {
-    game: this.gameService.getGame(),
     fauls: 0,
     assists: 0,
     onePM: 0,
@@ -30,7 +29,6 @@ export class PlayerViewComponent implements OnInit {
     surname: '',
     number: 0,
     stats: this.gameStats,
-    team: this.gameService.getTeam('home'),
   };
   @Output() deletePlayer = new EventEmitter<void>();
 

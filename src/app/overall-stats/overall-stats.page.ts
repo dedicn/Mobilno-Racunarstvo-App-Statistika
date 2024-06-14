@@ -22,10 +22,10 @@ export class OverallStatsPage implements OnInit {
     guestPoints: 0,
     home: this.gameService.getTeam('home'),
     guest: this.gameService.getTeam('guest'),
+    stats: null
   };
 
   gameSt: GameStats = {
-    game: this.gm,
     faulsHome: 0,
     assistsHome: 0,
     onePMHome: 0,
@@ -75,48 +75,20 @@ export class OverallStatsPage implements OnInit {
     });
 
     this.playerService.playersHome.subscribe((players) => {
-      this.playersHome = players.map((player) => {
-        if (!player.stats) {
-          player.stats = {
-            game: this.gameService.getGame(),
-            fauls: 0,
-            assists: 0,
-            onePM: 0,
-            twoPM: 0,
-            onePA: 0,
-            twoPA: 0,
-            OREB: 0,
-            DREB: 0,
-          };
-        }
-        return player;
-      });
+      this.playersHome = players;
     });
 
     this.playerService.playersGuest.subscribe((players) => {
-      this.playersGuest = players.map((player) => {
-        if (!player.stats) {
-          player.stats = {
-            game: this.gameService.getGame(),
-            fauls: 0,
-            assists: 0,
-            onePM: 0,
-            twoPM: 0,
-            onePA: 0,
-            twoPA: 0,
-            OREB: 0,
-            DREB: 0,
-          };
-        }
-        return player;
-      });
+      this.playersGuest = players;
     });
 
     console.log("Pobednik je: " + this.winningTeam);
   }
 
   goHome() {
-    localStorage.setItem('savedCodeGame', JSON.stringify(''));
+    localStorage.removeItem('savedCodeGame');
+    this.gameService.setToDefault();
+    this.playerService.setToDefault();
     this.router.navigateByUrl('home');
   }
 }

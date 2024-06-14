@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title style="color: black; font-size: 25px;">Uloguj se</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="changeToAdmin()"> {{isAdmin ? 'Vrati se' : 'Admin'}}</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<div class = "help">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/FIBA-3x3-Logo-black.jpg" alt="3x3" class="centered-image">
+  <strong>{{isAdmin ? 'Dobrodošli na stranicu Admina' : 'Molimo Vas unesite kredencijale'}}</strong>
+</div>
+  <form #logInForm="ngForm" (ngSubmit)="onLogIn(logInForm)">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-list>
+            <ion-item>
+              <ion-input type="email" label="Email" label-placement="fixed" name="email" ngModel email required #email="ngModel"></ion-input>
+            </ion-item>
+
+            <ion-item lines="none" *ngIf="email.invalid && email.touched">
+              <ion-label>Nije validan email adresa.</ion-label>
+            </ion-item>
+
+            <ion-item>
+              <ion-input type="password" label="Lozinka" label-placement="fixed" ngModel name="password" minlength="7" required #password="ngModel"></ion-input>
+            </ion-item>
+
+            <ion-item lines="none" *ngIf="password.invalid && password.touched">
+              <ion-label>Mora da sadrži minimalno 7 karaketra</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size-sm="6">
+          <ion-button type="submit" color="primary" expand="block" shape="round" size="medium" [disabled]="logInForm.invalid">
+            Uloguj se
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
+

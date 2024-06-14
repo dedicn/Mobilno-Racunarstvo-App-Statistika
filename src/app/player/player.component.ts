@@ -10,7 +10,6 @@ import { GameService } from '../game.service';
 })
 export class PlayerComponent implements OnInit {
   gameStats: PlayerStats = {
-    game: this.gameService.getGame(),
     fauls: 0,
     assists: 0,
     onePM: 0,
@@ -27,7 +26,6 @@ export class PlayerComponent implements OnInit {
     surname: '',
     number: 0,
     stats: this.gameStats,
-    team: this.gameService.getTeam("home"),
   };
   @Input() index: number = 1;
 

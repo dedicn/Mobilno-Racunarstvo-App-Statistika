@@ -28,7 +28,6 @@ export class PlayerInputFormComponent {
     surname: '',
     number: null,
     stats: null,
-    team: this.gameService.getTeam('home'),
   };
   maxPlayers: number = 4;
 
@@ -45,7 +44,7 @@ export class PlayerInputFormComponent {
   onAddPlayer() {
     if (this.players.length < this.maxPlayers) {
       this.playerService.addPlayer(this.team, { ...this.player });
-      this.playerService.savePlayerToDB(this.player).subscribe();
+      this.playerService.savePlayerToDB(this.player, this.team).subscribe();
 
       this.player.name = '';
       this.player.surname = '';
@@ -57,6 +56,7 @@ export class PlayerInputFormComponent {
 
   onDeletePlayer(playerToDelete: Player) {
     this.playerService.deletePlayer(this.team, playerToDelete);
+    this.playerService.deletePlayerFromDB(playerToDelete.id, playerToDelete, this.team).subscribe();
   }
 
   navigateToPage() {

@@ -1,7 +1,7 @@
 import { Game } from "./game.model";
 
 export interface GameStats {
-  game: Game;
+  // game: Game;
   faulsHome: number;
   assistsHome: number;
   onePMHome: number;

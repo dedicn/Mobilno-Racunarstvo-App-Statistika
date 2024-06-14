@@ -28,11 +28,11 @@ export class GamePage implements OnInit {
     guestPoints: 0,
     home: this.gameService.getTeam('home'),
     guest: this.gameService.getTeam('guest'),
+    stats: null,
   };
   gameSubs: Subscription = new Subscription();
 
   gameStats: GameStats = {
-    game: this.game,
     faulsHome: 0,
     assistsHome: 0,
     onePMHome: 0,
@@ -69,6 +69,17 @@ export class GamePage implements OnInit {
     private router: Router
   ) {}
 
+  async presentAlert(tema: "home" | "guest") {
+    const name = this.gameService.getTeam(tema).name;
+    const alert = await this.alertCtrl.create({
+      header: 'Greška',
+      message: `Ne mozete da dodate tajmaut, tim ${name} vec ima 1!`,
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
+
   async openPlayerModal(player: any, teamType: 'home' | 'guest') {
     const modal = await this.playerModal.create({
       component: PlayerModalComponent,
@@ -78,7 +89,7 @@ export class GamePage implements OnInit {
   }
 
   async confirmEndGame() {
-    if(this.homePoints == this.guestPoints){
+    if (this.homePoints == this.guestPoints) {
       const alert = await this.alertCtrl.create({
         header: 'Greska!',
         message: 'Utakmica mora da se zavrsi sa pobednikom.',
@@ -86,7 +97,7 @@ export class GamePage implements OnInit {
       });
 
       await alert.present();
-    }else{
+    } else {
       const alert = await this.alertCtrl.create({
         header: 'Kraj',
         message: 'Da li sigurno želite da završite utakmicu?',
@@ -129,23 +140,38 @@ export class GamePage implements OnInit {
     await alert.present();
   }
 
-  deleteGame(){
-    localStorage.setItem('savedCodeGame', JSON.stringify(''));
-    this.playerService.deletePlayersFromDB().subscribe();
+  deleteGame() {
+    localStorage.removeItem('savedCodeGame');
+    this.playerService.deletePlayersFromDB();
     this.gameService.deleteGameStats().subscribe();
     this.gameService.deleteGame().subscribe();
+    localStorage.setItem('savedCodeGame', '');
+    this.router.navigateByUrl('/home');
   }
 
   endGame() {
     //TODO: ovde ide za bazu da se sacuva sve
     console.log('Utakmica je završena');
+
+    console.log(
+      'da vidim jel ok ' +
+        this.gameService.getGame().homePoints +
+        ' vs ' +
+        this.gameService.getGame().guestPoints
+    );
     this.gameService.updateGame().subscribe();
-    this.gameService.updateGameStats().subscribe();
+    // this.gameService.updateGameStats().subscribe();
     this.router.navigateByUrl('overall-stats');
   }
 
   addTO(teamType: 'home' | 'guest') {
-    this.gameService.addTO(teamType);
+    if (teamType === 'home' && this.gameStats.TOHome >= 1) {
+      this.presentAlert("home");
+    } else if (teamType === 'guest' && this.gameStats.TOGuest >= 1) {
+      this.presentAlert("guest");
+    } else {
+      this.gameService.addTO(teamType);
+    }
   }
 
   ngOnInit() {
@@ -169,10 +195,11 @@ export class GamePage implements OnInit {
       }
     );
 
-    
-
     this.gameStatsSubs = this.gameService.gameStats.subscribe((gameStat) => {
       this.gameStats = gameStat;
     });
+
+    this.gameService.setPlayersForTeam(this.playersHome, 'home');
+    this.gameService.setPlayersForTeam(this.playersGuest, 'guest');
   }
 }

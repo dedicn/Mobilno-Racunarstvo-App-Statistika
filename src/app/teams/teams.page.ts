@@ -19,15 +19,13 @@ export class TeamsPage implements OnInit {
       console.log('Id igre str tim' + this.gameService.getGame().id);
       console.log(this.gameService.getGame());
       console.log('Domaci vs Gosti', this.home, this.guest);
-      const homeTeam: Team = { teamID: 'home', name: this.home };
-      const guestTeam: Team = { teamID: 'guest', name: this.guest };
+      const homeTeam: Team = { teamID: 'home', name: this.home, players: null };
+      const guestTeam: Team = { teamID: 'guest', name: this.guest, players: null };
 
-      // Proveravamo da li su timovi već postavljeni u gameService
+
       const currentHomeTeam = this.gameService.getTeam('home');
       const currentGuestTeam = this.gameService.getTeam('guest');
 
-      // Ako su timovi već postavljeni i imaju ista imena kao uneti,
-      // ne radimo ništa
       if (
         currentHomeTeam &&
         currentHomeTeam.name === this.home &&

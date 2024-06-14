@@ -14,7 +14,7 @@
             'winner': winningTeam === game.home.name,
             'loser': winningTeam !== game.home.name && winningTeam !== 'Nerešeno'
           }">
-          <h2 >Domaci Tim</h2>
+          <h2 style="margin-left: 5px;">Domaci tim: {{game.home.name}}</h2>
         </div>
         <ion-list>
           <ion-item *ngFor="let player of playersHome">
@@ -23,12 +23,12 @@
 
               <div class="stats">
                 <div>
-                  <p style="font-size: 17px;color: black;">Sut za (1P): {{ player.stats?.onePM }}/{{player.stats?.onePA}}</p>
-                  <p style="font-size: 17px;color: black;">Sut za (2P): {{ player.stats?.twoPM }}/{{player.stats?.twoPA}}</p>
+                  <p style="font-size: 17px;color: black;">Sut za (1P): {{ player.stats?.onePM ?? 0 }}/{{ (player.stats?.onePA ?? 0) + (player.stats?.onePM ?? 0) }}</p>
+                  <p style="font-size: 17px;color: black;">Sut za (2P): {{ player.stats?.twoPM ?? 0 }}/{{ (player.stats?.twoPM ?? 0) + (player.stats?.twoPA ?? 0) }}</p>
                 </div>
                 <div>
-                  <p style="font-size: 17px;color: black;">Faulovi: {{ player.stats?.onePM }}/{{player.stats?.onePA}}</p>
-                  <p style="font-size: 17px;color: black;">Faulovi: {{ player.stats?.twoPM }}/{{player.stats?.twoPA}}</p>
+                  <p style="font-size: 17px;color: black;">Faulovi: {{ player.stats?.fauls ?  player.stats?.fauls : 0}}</p>
+                  <p style="font-size: 17px;color: black;">Asistencije: {{ player.stats?.assists ?  player.stats?.fauls : 0}}</p>
                 </div>
               </div>
             </ion-label>
@@ -42,7 +42,7 @@
             'winner': winningTeam === game.guest.name,
             'loser': winningTeam !== game.guest.name && winningTeam !== 'Nerešeno'
           }">
-          <h2>Gostujuci Tim</h2>
+          <h2 style="margin-left: 5px;">Gostujuci tim: {{game.guest.name}}</h2>
         </div>
         <ion-list>
           <ion-item *ngFor="let player of playersGuest">
@@ -50,12 +50,12 @@
               <h2>#{{player.number}} {{ player.name }} {{ player.surname }}</h2>
               <div class="stats">
                 <div>
-                  <p style="font-size: 17px;color: black;">Sut za (1P): {{ player.stats?.onePM }}/{{player.stats?.onePA}}</p>
-                  <p style="font-size: 17px;color: black;">Sut za (2P): {{ player.stats?.twoPM }}/{{player.stats?.twoPA}}</p>
+                  <p style="font-size: 17px;color: black;">Sut za (1P): {{ player.stats?.onePM ?? 0 }}/{{ (player.stats?.onePA ?? 0) + (player.stats?.onePM ?? 0) }}</p>
+                  <p style="font-size: 17px;color: black;">Sut za (2P): {{ player.stats?.twoPM ?? 0 }}/{{ (player.stats?.twoPM ?? 0) + (player.stats?.twoPA ?? 0) }}</p>
                 </div>
                 <div>
-                  <p style="font-size: 17px;color: black;">Faulovi: {{ player.stats?.onePM }}/{{player.stats?.onePA}}</p>
-                  <p style="font-size: 17px;color: black;">Faulovi: {{ player.stats?.twoPM }}/{{player.stats?.twoPA}}</p>
+                  <p style="font-size: 17px;color: black;">Faulovi: {{ player.stats?.fauls ?  player.stats?.fauls: 0}}</p>
+                  <p style="font-size: 17px;color: black;">Asistencije: {{ player.stats?.assists ?  player.stats?.fauls: 0}}</p>
                 </div>
               </div>
             </ion-label>

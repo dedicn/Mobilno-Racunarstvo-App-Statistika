@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin, throwError } from 'rxjs';
 import { Player } from './player.model';
 import { HttpClient } from '@angular/common/http';
 import { tap, catchError, map, take } from 'rxjs/operators';
 import { GameService } from './game.service';
+import { resetFakeAsyncZone } from '@angular/core/testing';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,12 @@ export class PlayerService {
   playersGuest = this.playersGuestSubject.asObservable();
 
   constructor(private http: HttpClient, private gameService: GameService) {}
+
+  setToDefault(){
+    const player: Player[] = [];
+    this.playersGuestSubject.next(player);
+    this.playersHomeSubject.next(player);
+  }
 
   addPlayer(team: 'home' | 'guest', player: Player) {
     if (team === 'home') {
@@ -94,172 +101,131 @@ export class PlayerService {
           return playersArray;
         }),
         tap((players) => {
-          const homeTeamID = this.gameService.getTeam('home').name; 
+          const homeTeamID = this.gameService.getTeam('home').name;
           const guestTeamID = this.gameService.getTeam('guest').name;
 
-          const homePlayers = players.filter(
-            (player) => player.team.name === homeTeamID
-          );
-          const guestPlayers = players.filter(
-            (player) => player.team.name === guestTeamID
-          );
+          // const homePlayers = players.filter(
+          //   (player) => player.team.name === homeTeamID
+          // );
+          // const guestPlayers = players.filter(
+          //   (player) => player.team.name === guestTeamID
+          // );
 
-          this.playersHomeSubject.next(homePlayers);
-          this.playersGuestSubject.next(guestPlayers);
+          // this.playersHomeSubject.next(homePlayers);
+          // this.playersGuestSubject.next(guestPlayers);
         })
       );
   }
-
-  // saveAllPlayersToDB() {
-  //   const playersHome = this.playersHomeSubject.value;
-  //   const playersGuest = this.playersGuestSubject.value;
-  //   console.log('saveALlPl');
-
-  //   const saveRequests: Observable<Player>[] = [];
-
-  //   playersHome.forEach((player) => {
-  //     saveRequests.push(this.savePlayerToDB(player));
-  //   });
-
-  //   playersGuest.forEach((player) => {
-  //     saveRequests.push(this.savePlayerToDB(player));
-  //   });
-
-  //   console.log('prosao save svih');
-
-  //   return forkJoin(saveRequests).pipe(
-  //     tap((savedPlayers) => {
-  //       // Ažuriraj liste igrača sa novim ID-jevima
-  //       const updatedHomePlayers = savedPlayers.filter(
-  //         (player) => player.team.name === this.gameService.getTeam('home').name
-  //       );
-  //       const updatedGuestPlayers = savedPlayers.filter(
-  //         (player) =>
-  //           player.team.name === this.gameService.getTeam('guest').name
-  //       );
-
-  //       this.playersHomeSubject.next(updatedHomePlayers);
-  //       this.playersGuestSubject.next(updatedGuestPlayers);
-  //     })
-  //   );
-  // }
 
   //jedan po jedan igrac
-  savePlayerToDB(player: Player) {
-    console.log("pozvana savePlayer");
-    let id: string;
+  savePlayerToDB(player: Player, team: string) {
+    console.log('pozvana savePlayer');
+    const gameId = this.gameService.getGame().id;
+    console.log(`${gameId} od igre`);
+
+    const playerToSave = { ...player }; // kreiraj kopiju objekta kako bi izbegao neželjene izmene
+    console.log(`${player.name} ${player.surname} od igre`);
+
     return this.http
-      .post(
-        'https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/players.json',
-        player
+      .post<{ name: string }>(
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${gameId}/${team}/players.json`,
+        playerToSave
       )
       .pipe(
-        map((responseData: any) => {
-          return {
-            id: responseData.name,
-            name: responseData.name,
-            surname: responseData.surname,
-            number: responseData.number,
-            team: responseData.team,
-            stats: responseData.stats,
-          };
+        map((response) => {
+          playerToSave.id = response.name; // ažuriramo ID igrača sa vrednošću vraćenom iz Firebase
+          return playerToSave;
         }),
         take(1),
-        tap((savedPlayer: Player) => {
-          console.log("id plyar" + savedPlayer.id);
-          const newPlayerList =
-            savedPlayer.team.teamID === 'home'
-              ? this.playersHomeSubject.value.filter(
-                  (player) =>
-                    player.name !== savedPlayer.name ||
-                    player.surname !== savedPlayer.surname ||
-                    player.number !== savedPlayer.number
-                )
-              : this.playersGuestSubject.value.filter(
-                  (player) =>
-                    player.name !== savedPlayer.name ||
-                    player.surname !== savedPlayer.surname ||
-                    player.number !== savedPlayer.number
-                );
+        tap((savedPlayer) => {
+          console.log(
+            `Player ID: ${savedPlayer.id}, Name: ${savedPlayer.name}`
+          );
 
-          if (savedPlayer.team.teamID === 'home') {
-            this.playersHomeSubject.next([...newPlayerList, savedPlayer]);
+          let newPlayerList;
+          if (team === 'home') {
+            newPlayerList = this.playersHomeSubject.value.filter(
+              (p) =>
+                p.name !== savedPlayer.name ||
+                p.surname !== savedPlayer.surname ||
+                p.number !== savedPlayer.number
+            );
+            console.log(`Dužina home liste: ${newPlayerList.length}`);
+            newPlayerList = [...newPlayerList, savedPlayer];
+            this.playersHomeSubject.next(newPlayerList);
           } else {
-            this.playersGuestSubject.next([...newPlayerList, savedPlayer]);
+            newPlayerList = this.playersGuestSubject.value.filter(
+              (p) =>
+                p.name !== savedPlayer.name ||
+                p.surname !== savedPlayer.surname ||
+                p.number !== savedPlayer.number
+            );
+            console.log(`Dužina guest liste: ${newPlayerList.length}`);
+            newPlayerList = [...newPlayerList, savedPlayer];
+            this.playersGuestSubject.next(newPlayerList);
           }
+
+          console.log(`Player saved to ${team} team:`, savedPlayer);
+        }),
+        catchError((error) => {
+          console.error('Error saving player', error);
+          return throwError(error);
         })
       );
   }
 
-  // updateAllPlayersInDB(): Observable<any> {
-  //   const playersHome = this.playersHomeSubject.value;
-  //   const playersGuest = this.playersGuestSubject.value;
-
-  //   // Kombinujemo sve igrače u jednu listu
-  //   const allPlayers = [...playersHome, ...playersGuest];
-
-  //   // Kreiramo zahteve za ažuriranje za svakog igrača
-  //   const updateRequests: Observable<any>[] = allPlayers.map(
-  //     (player: Player) => {
-  //       return this.updatePlayerInDB(player.id, player).pipe(
-  //         map((response: any) => {
-  //           // Vraćamo ažuriranog igrača sa ID-em
-  //           return {
-  //             ...player,
-  //             id: player.id,
-  //           };
-  //         })
-  //       );
-  //     }
-  //   );
-
-  //   // Koristimo forkJoin da pošaljemo sve zahteve istovremeno
-  //   return forkJoin(updateRequests).pipe(
-  //     tap((updatedPlayers: Player[]) => {
-  //       // Ažuriramo BehaviorSubject sa novim vrednostima igrača
-  //       const updatedHomePlayers = updatedPlayers.filter(
-  //         (player) => player.team.teamID === 'home'
-  //       );
-  //       const updatedGuestPlayers = updatedPlayers.filter(
-  //         (player) => player.team.teamID === 'guest'
-  //       );
-
-  //       this.playersHomeSubject.next(updatedHomePlayers);
-  //       this.playersGuestSubject.next(updatedGuestPlayers);
-  //     })
-  //   );
-  // }
-
-  updatePlayerInDB(playerID: string, updatedPlayer: Player) {
+  updatePlayerInDB(playerID: string, updatedPlayer: Player, team: string) {
     return this.http.put(
-      `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/players/${playerID}.json`,
+      `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${
+        this.gameService.getGame().id
+      }/${team}/players/${playerID}.json`,
       updatedPlayer
+    );
+  }
+
+  deletePlayerFromDB(playerID: string, player: Player, team: string) {
+    console.log('brisnaje igraca sa id:  ' + playerID);
+    console.log(team);
+    return this.http.delete(
+      `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${
+        this.gameService.getGame().id
+      }/${team}/players/${playerID}.json`
     );
   }
 
   deletePlayersFromDB() {
     const playersHome = this.playersHomeSubject.value;
     const playersGuest = this.playersGuestSubject.value;
-
-    // Kombinujemo sve igrače u jednu listu
-    const allPlayers = [...playersHome, ...playersGuest];
+    let id = this.gameService.getGame().id;
 
     // Kreiramo zahteve za brisanje za svakog igrača
-    const deleteRequests: Observable<any>[] = allPlayers.map(
+    const deleteRequests: Observable<any>[] = playersHome.map(
       (player: Player) => {
         return this.http.delete(
-          `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/players/${player.id}.json`
+          `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${id}/home/${player.id}.json`
         );
       }
     );
 
-    // Koristimo forkJoin da pošaljemo sve zahteve za brisanje istovremeno
-    return forkJoin(deleteRequests).pipe(
-      tap(() => {
-        // Nakon uspešnog brisanja, osvežavamo BehaviorSubject-ove
-        this.playersHomeSubject.next([]);
-        this.playersGuestSubject.next([]);
-      })
+    const deleteRequestsG: Observable<any>[] = playersGuest.map(
+      (player: Player) => {
+        return this.http.delete(
+          `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${id}/guest/${player.id}.json`
+        );
+      }
     );
+
+    this.playersHomeSubject.next([]);
+    this.playersGuestSubject.next([]);
+
+    // deleteRequests[...]
+    // // Koristimo forkJoin da pošaljemo sve zahteve za brisanje istovremeno
+    // return forkJoin(deleteRequests).pipe(
+    //   tap(() => {
+    //     // Nakon uspešnog brisanja, osvežavamo BehaviorSubject-ove
+    //     this.playersHomeSubject.next([]);
+    //     this.playersGuestSubject.next([]);
+    //   })
+    // );
   }
 }

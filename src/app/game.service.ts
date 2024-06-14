@@ -4,7 +4,9 @@ import { BehaviorSubject } from 'rxjs';
 import { Game } from './game.model';
 import { GameStats } from './game-stats.model';
 import { HttpClient } from '@angular/common/http';
-import { tap, catchError,map, take } from 'rxjs/operators';
+import { tap, catchError,map, take, scan, throwIfEmpty } from 'rxjs/operators';
+import { PlayerService } from './players-service.service';
+import { Player } from './player.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,25 +20,11 @@ export class GameService {
 
   private gameCode: string = '';
   private teams: { home: Team; guest: Team } = {
-    home: { teamID: '', name: '' },
-    guest: { teamID: '', name: '' },
+    home: { teamID: '', name: '', players: null },
+    guest: { teamID: '', name: '', players: null },
   };
-
-  gameObject: Game = {
-    id: '',
-    gameCode: this.gameCode,
-    date: new Date(),
-    homePoints: this.homePointsSubject.value,
-    guestPoints: this.guestPointsSubject.value,
-    home: this.teams['home'],
-    guest: this.teams['guest'],
-  };
-
-  private gameSubject = new BehaviorSubject<Game>(this.gameObject);
-  game = this.gameSubject.asObservable();
 
   gameSt: GameStats = {
-    game: this.gameSubject.value,
     faulsHome: 0,
     assistsHome: 0,
     onePMHome: 0,
@@ -59,8 +47,37 @@ export class GameService {
   private gameStatsSubject = new BehaviorSubject<GameStats>(this.gameSt);
   gameStats = this.gameStatsSubject.asObservable();
 
+  gameObject: Game = {
+    id: '',
+    gameCode: this.gameCode,
+    date: new Date(),
+    homePoints: this.homePointsSubject.value,
+    guestPoints: this.guestPointsSubject.value,
+    home: this.teams['home'],
+    guest: this.teams['guest'],
+    stats: this.gameStatsSubject.value,
+  };
+
+  private gameSubject = new BehaviorSubject<Game>(this.gameObject);
+  game = this.gameSubject.asObservable();
+
   constructor(private http: HttpClient) {}
-  //TODO: ovde da se dodaju poeni u stats
+
+  setPlayersForTeam(players: Player[], teamT: string){
+    const gameUpdates = this.gameSubject.value;
+
+    if(teamT === "home"){
+      gameUpdates.home.players = players;
+    }else{
+      gameUpdates.guest.players = players;
+    }
+
+    console.log(gameUpdates.home.players);
+    console.log(gameUpdates.guest.players);
+
+    this.gameSubject.next(gameUpdates);
+  }
+
   addPoints(teamType: 'home' | 'guest', points: number) {
     if (teamType === 'home') {
       const currentPoints = this.homePointsSubject.value;
@@ -71,6 +88,11 @@ export class GameService {
     } else {
       console.error('Invalid team type');
     }
+
+    const game = this.gameSubject.value;
+    game.homePoints = this.homePointsSubject.value;
+    game.guestPoints = this.guestPointsSubject.value;
+    this.gameSubject.next(game);
   }
 
   updateFauls(teamType: 'home' | 'guest', fauls: number) {
@@ -110,41 +132,60 @@ export class GameService {
     }
 
     this.gameStatsSubject.next(updatedStats);
+
+    this.updateGameStats().subscribe();
   }
 
   updateOnePM(teamType: 'home' | 'guest', onePM: number) {
     const currentStats = this.gameStatsSubject.value;
     const updatedStats = { ...currentStats };
+    const gm = this.gameSubject.value;
 
     if (teamType === 'home') {
       const currentPoints = this.homePointsSubject.value;
       this.homePointsSubject.next(currentPoints + onePM);
       updatedStats.onePMHome += onePM;
       this.gameObject.homePoints += onePM;
+      gm.homePoints += onePM;
+      gm.stats = updatedStats;
+      // this.gameSubject.value.homePoints += onePM;
+      // this.gameSubject.next();
     } else if (teamType === 'guest') {
       const currentPoints = this.guestPointsSubject.value;
       this.guestPointsSubject.next(currentPoints + onePM);
       updatedStats.onePMGuest += onePM;
       this.gameObject.guestPoints += onePM;
+
+      gm.guestPoints += onePM;
+      gm.stats = updatedStats;
     }
 
     this.gameStatsSubject.next(updatedStats);
+    this.gameSubject.next(gm);
   }
 
   updateTwoPM(teamType: 'home' | 'guest', twoPM: number) {
     const currentStats = this.gameStatsSubject.value;
     const updatedStats = { ...currentStats };
+    const gm = this.gameSubject.value;
 
     if (teamType === 'home') {
       const currentPoints = this.homePointsSubject.value;
       this.homePointsSubject.next(currentPoints + 2);
       updatedStats.twoPMHome += twoPM;
       this.gameObject.homePoints += 2;
+
+      gm.homePoints += 2;
+      gm.stats = updatedStats;
     } else if (teamType === 'guest') {
       const currentPoints = this.guestPointsSubject.value;
-      this.guestPointsSubject.next(currentPoints + twoPM);
+      this.guestPointsSubject.next(currentPoints + 2);
       updatedStats.twoPMGuest += twoPM;
-      this.gameObject.guestPoints += twoPM;
+      this.gameObject.guestPoints += 2;
+
+      gm.guestPoints += 2;
+      gm.stats = updatedStats;
+      this.gameSubject.next(gm);
     }
 
     this.gameStatsSubject.next(updatedStats);
@@ -227,6 +268,7 @@ export class GameService {
       guestPoints: this.guestPointsSubject.value,
       home: this.teams['home'],
       guest: this.teams['guest'],
+      stats: this.gameSubject.value.stats,
     };
     this.gameSubject.next(this.gameObject);
   }
@@ -286,6 +328,7 @@ export class GameService {
       // this.gameSubject.next(game);
       // console.log('Game loaded from localStorage', game);
     }
+    return savedGame;
   }
 
   saveGame() {
@@ -307,7 +350,9 @@ export class GameService {
         take(1),
         tap((savedGame) => {
           savedGame.id = id;
-          console.log("id igre je" + savedGame.id + "neki deo " + savedGame.gameCode);
+          console.log(
+            'id igre je' + savedGame.id + 'neki deo ' + savedGame.gameCode
+          );
           console.log('Game saved', savedGame);
           this.gameSubject.next(savedGame);
         }),
@@ -337,10 +382,10 @@ export class GameService {
                 guestPoints: game.guestPoints,
                 home: game.home,
                 guest: game.guest,
+                stats: game.stats,
               });
             }
           }
-          // Pretpostavimo da vam treba samo prvi objekat iz niza
           return gamesArray.length > 0 ? gamesArray[0] : null;
         }),
         tap((game) => {
@@ -351,11 +396,38 @@ export class GameService {
       );
   }
 
+  setToDefault(){
+    this.homePointsSubject.next(0);
+    this.guestPointsSubject.next(0);
+    this.gameStatsSubject.next(this.gameSt);
+    const gameObject: Game = {
+      id: '',
+      gameCode: this.gameCode,
+      date: new Date(),
+      homePoints: this.homePointsSubject.value,
+      guestPoints: this.guestPointsSubject.value,
+      home: { teamID: '', name: '', players: null },
+      guest: { teamID: '', name: '', players: null },
+      stats: null,
+    };
+
+    this.gameSubject.next(gameObject);
+  }
+
   updateGame() {
     const gameID = this.gameSubject.value.id;
+    console.log(this.gameSubject.value.stats?.TOGuest);
+    // this.playerService.playersHome.subscribe((players) =>{
+    //   this.gameSubject.value.home.players = players;
+    // });
+
+    // this.playerService.playersGuest.subscribe((players) => {
+    //   this.gameSubject.value.guest.players = players;
+    // });
+
     console.log(this.gameSubject.value);
-    console.log("upd" +this.gameSubject.value.guest.name);
-    console.log("upd" + this.gameSubject.value.home.name);
+    console.log('upd' + this.gameSubject.value.guest.name);
+    console.log('upd' + this.gameSubject.value.home.name);
     return this.http
       .put<Game>(
         `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${gameID}.json`,
@@ -382,8 +454,9 @@ export class GameService {
             date: new Date(),
             homePoints: 0,
             guestPoints: 0,
-            home: { teamID: '', name: '' },
-            guest: { teamID: '', name: '' },
+            home: { teamID: '', name: '', players: null },
+            guest: { teamID: '', name: '', players: null },
+            stats: null,
           });
           console.log(
             `Game with ID ${this.gameSubject.value.gameCode} deleted successfully.`
@@ -395,26 +468,26 @@ export class GameService {
   getGameStatsFromDB(gameID: string) {
     return this.http
       .get<{ [key: string]: any }>(
-        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game-stats/${gameID}.json`
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${gameID}/stats.json`
       )
       .pipe(
         map((responseData: { [key: string]: any }) => {
           const gameStats: GameStats = {
-            game: {
-              id: responseData['game']['id'],
-              gameCode: responseData['game']['gameCode'],
-              date: new Date(responseData['game']['date']),
-              homePoints: responseData['game']['homePoints'],
-              guestPoints: responseData['game']['guestPoints'],
-              home: {
-                teamID: responseData['game']['home']['teamID'],
-                name: responseData['game']['home']['name'],
-              },
-              guest: {
-                teamID: responseData['game']['guest']['teamID'],
-                name: responseData['game']['guest']['name'],
-              },
-            },
+            // game: {
+            //   id: responseData['game']['id'],
+            //   gameCode: responseData['game']['gameCode'],
+            //   date: new Date(responseData['game']['date']),
+            //   homePoints: responseData['game']['homePoints'],
+            //   guestPoints: responseData['game']['guestPoints'],
+            //   home: {
+            //     teamID: responseData['game']['home']['teamID'],
+            //     name: responseData['game']['home']['name'],
+            //   },
+            //   guest: {
+            //     teamID: responseData['game']['guest']['teamID'],
+            //     name: responseData['game']['guest']['name'],
+            //   },
+            // },
             faulsHome: responseData['faulsHome'],
             assistsHome: responseData['assistsHome'],
             onePMHome: responseData['onePMHome'],
@@ -445,7 +518,7 @@ export class GameService {
   saveGameStatsToDB(gameStats: GameStats) {
     return this.http
       .post<{ name: string }>(
-        'https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game-stats.json',
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${this.gameSubject.value.id}/stats.json`,
         gameStats
       )
       .pipe(
@@ -453,7 +526,7 @@ export class GameService {
           return {
             ...gameStats,
             game: {
-              ...gameStats.game,
+              // ...gameStats.game,
               gameID: responseData.name,
             },
           };
@@ -464,11 +537,12 @@ export class GameService {
       );
   }
 
+  //Menjaj samo da ide stats
   updateGameStats() {
-    const gameID = this.gameStatsSubject.value.game.id;
+    const gameID = this.gameSubject.value.id;
     return this.http
       .put<GameStats>(
-        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game-stats/${gameID}.json`,
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${gameID}/stats.json`,
         this.gameStatsSubject.value
       )
       .pipe(
@@ -481,12 +555,11 @@ export class GameService {
   deleteGameStats() {
     return this.http
       .delete<void>(
-        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game-stats/${this.gameStatsSubject.value.game.id}.json`
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${this.gameSubject.value.id}/stats.json`
       )
       .pipe(
         tap(() => {
           this.gameStatsSubject.next({
-            game: this.gameSubject.value,
             faulsHome: 0,
             assistsHome: 0,
             onePMHome: 0,

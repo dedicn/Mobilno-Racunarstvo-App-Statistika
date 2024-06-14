@@ -6,6 +6,5 @@ export interface Player {
   name: string;
   surname: string;
   number: number | null;
-  team: Team;
   stats: PlayerStats | null;
 }
