@@ -7,6 +7,19 @@ ion-toolbar{
     --background: #ffff
 }
 
+ion-checkbox {
+  --size: 30px;
+  padding: 0;
+  margin: 0 10px 0 0;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 0; 
+  margin: 0; 
+}
+
 .custom-header {
   background-color: #ffff; 
   display: flex;
@@ -43,7 +56,11 @@ strong{
   background-color: #a59f9f;
   justify-content: space-between; 
   align-items: center; 
-  width: 100%; 
+  width: 250px; 
+  border-radius: .5em;
+  margin-left: 90px;
+  margin-bottom: 7px;
+  margin-top: 7px;
 }
 .componennts p{
     font-size: 20px;
@@ -66,6 +83,10 @@ strong{
 :root{
   --ion-color-light: #ffffff;
 	
+}
+
+ion-list{
+  --background: #ffff;
 }
 
 ion-toolbar{
@@ -107,10 +128,10 @@ ion-content{
 }
 
 ion-item {
-  margin-bottom: 15px;
   --background: #ffff;
   color: black;
   font-size: 22px;
+  --border-color: transparent;
 }
 
 ion-header{

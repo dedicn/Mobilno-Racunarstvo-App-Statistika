@@ -6,6 +6,7 @@ import { AlertController } from '@ionic/angular';
 import { Team } from '../team.model';
 import { Game } from '../game.model';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth-service.service';
 
 @Component({
   selector: 'app-players-guest',
@@ -22,7 +23,8 @@ export class PlayersGuestPage implements OnInit {
     private playerService: PlayerService,
     private gameService: GameService,
     private alertController: AlertController,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   async presentAlert(message: string) {
@@ -38,7 +40,7 @@ export class PlayersGuestPage implements OnInit {
   ngOnInit() {
     // this.playerService.playersGuest.subscribe((players) => {
     //   this.playersGuest = players;
-      this.updateSelectionValidity();
+    this.updateSelectionValidity();
     // });
 
     console.log(this.playersGuest);
@@ -92,5 +94,10 @@ export class PlayersGuestPage implements OnInit {
     } else {
       this.presentAlert('Morate da izaberete minimum 3 a maksimum 4 igraca!');
     }
+  }
+
+  logOut() {
+    this.authService.logOut();
+    this.router.navigateByUrl('/log-in');
   }
 }

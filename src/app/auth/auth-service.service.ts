@@ -211,6 +211,7 @@ export class AuthService {
 
   logOut() {
     localStorage.removeItem('token');
+    localStorage.removeItem('isAdmin');
     this.user = null;
   }
 }

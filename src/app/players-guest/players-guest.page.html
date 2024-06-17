@@ -4,8 +4,11 @@
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
     <ion-title class="title-right">Gosti: {{guest.name}}</ion-title>
-    <ion-buttons slot="end">
+    <!-- <ion-buttons slot="end">
       <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/FIBA-3x3-Logo-black.jpg" alt="3x3" class="small-image">
+    </ion-buttons> -->
+    <ion-buttons slot="end">
+      <ion-button (click)="logOut()"> Izloguj se</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -13,7 +16,9 @@
 <ion-content>
   <ion-list>
     <ion-item *ngFor="let player of playersGuest">
-      <ion-checkbox slot="start" [(ngModel)]="player.selected" (ionChange)="onPlayerSelectionChange()"></ion-checkbox>
+      <label class="checkbox-wrapper">
+        <ion-checkbox slot="start" [(ngModel)]="player.selected" (ionChange)="onPlayerSelectionChange()"></ion-checkbox>
+      </label>
       <div class="player">
         <div class="components number"><p>#{{ player.number }}</p></div>
         <div class="components name"><p>{{ player.name }}</p></div>

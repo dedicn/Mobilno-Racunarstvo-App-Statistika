@@ -7,6 +7,7 @@ import { GameService } from '../game.service';
 import { AlertController } from '@ionic/angular';
 import { Game } from '../game.model';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth/auth-service.service';
 
 @Component({
   selector: 'app-players-home',
@@ -23,7 +24,8 @@ export class PlayersHomePage implements OnInit {
     private playerService: PlayerService,
     private gameService: GameService,
     private alertController: AlertController,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   async presentAlert(message: string) {
@@ -39,7 +41,7 @@ export class PlayersHomePage implements OnInit {
   ngOnInit() {
     // this.playerService.playersHome.subscribe((players) => {
     //   this.playersHome = players;
-      this.updateSelectionValidity();
+    this.updateSelectionValidity();
     // });
 
     this.gameService.game.subscribe((game) => {
@@ -86,13 +88,17 @@ export class PlayersHomePage implements OnInit {
       );
       this.gameService.setTeam('home', this.home);
       this.gameService.updateGame().subscribe();
-      this.playerService.setPlayers("home", this.playersHome);
+      this.playerService.setPlayers('home', this.playersHome);
       this.router.navigateByUrl('players-guest');
     } else {
       this.presentAlert('Morate da izaberete minimum 3 a maksimum 4 igraca!');
     }
   }
 
-  ngOnDestroy() {
+  logOut() {
+    this.authService.logOut();
+    this.router.navigateByUrl('/log-in');
   }
+
+  ngOnDestroy() {}
 }

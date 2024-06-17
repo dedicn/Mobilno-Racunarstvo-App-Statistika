@@ -4,6 +4,7 @@ import { Team } from '../team.model';
 import { GameService } from '../game.service';
 import { TeamsService } from '../teams.service';
 import { AlertController } from '@ionic/angular';
+import { AuthService } from '../auth/auth-service.service';
 
 @Component({
   selector: 'app-teams',
@@ -19,7 +20,8 @@ export class TeamsPage implements OnInit {
     private router: Router,
     private gameService: GameService,
     private teamsService: TeamsService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private authService: AuthService
   ) {}
 
   async presentAlert(message: string) {
@@ -48,12 +50,12 @@ export class TeamsPage implements OnInit {
       // ) {
       //   console.log('Timovi su već postavljeni.');
       // } else {
-        console.log(this.homeTeam);
-        console.log(this.guestTeam);
-        this.gameService.setTeam('home', this.homeTeam);
-        this.gameService.setTeam('guest', this.guestTeam);
+      console.log(this.homeTeam);
+      console.log(this.guestTeam);
+      this.gameService.setTeam('home', this.homeTeam);
+      this.gameService.setTeam('guest', this.guestTeam);
 
-        this.gameService.updateGame().subscribe();
+      this.gameService.updateGame().subscribe();
       // }
 
       this.router.navigateByUrl('/players-home');
@@ -73,5 +75,10 @@ export class TeamsPage implements OnInit {
     this.teamsService.teams.subscribe((teams) => {
       this.activeTeams = teams;
     });
+  }
+
+  logOut() {
+    this.authService.logOut();
+    this.router.navigateByUrl('/log-in');
   }
 }

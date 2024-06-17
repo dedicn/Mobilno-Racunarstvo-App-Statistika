@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameService } from '../game.service';
 import { ViewDidEnter, ViewWillEnter } from '@ionic/angular';
+import { AuthService } from '../auth/auth-service.service';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,7 @@ import { ViewDidEnter, ViewWillEnter } from '@ionic/angular';
 export class HomePage implements OnInit, ViewDidEnter, ViewWillEnter {
   gameCode: string = '';
 
-  constructor(private router: Router, private gameService: GameService) {}
+  constructor(private router: Router, private gameService: GameService, private authService: AuthService) {}
 
   ngOnInit(): void {
     const savedGameCode = localStorage.getItem('savedGameCode');
@@ -47,8 +48,8 @@ export class HomePage implements OnInit, ViewDidEnter, ViewWillEnter {
 
       const storedGameCode = localStorage.getItem('savedCodeGame');
       console.log(storedGameCode);
-      if (storedGameCode !== null && storedGameCode !== "") {
-        console.log("ipak ovde");
+      if (storedGameCode !== null && storedGameCode !== '') {
+        console.log('ipak ovde');
         this.gameService.updateGame().subscribe();
         this.gameService.saveGameToLocalStorage();
       } else {
@@ -61,5 +62,10 @@ export class HomePage implements OnInit, ViewDidEnter, ViewWillEnter {
     } else {
       console.log('Kod utakmice mora imati najmanje 6 znakova.');
     }
+  }
+
+  logOut() {
+    this.authService.logOut();
+    this.router.navigateByUrl('/log-in');
   }
 }
