@@ -15,14 +15,14 @@ import { Game } from '../game.model';
 })
 export class OverallStatsPage implements OnInit {
   gm: Game = {
-    gameCode:'',
+    gameCode: '',
     id: '',
     date: new Date(),
     homePoints: 0,
     guestPoints: 0,
     home: this.gameService.getTeam('home'),
     guest: this.gameService.getTeam('guest'),
-    stats: null
+    stats: null,
   };
 
   gameSt: GameStats = {
@@ -46,16 +46,15 @@ export class OverallStatsPage implements OnInit {
     TOGuest: 0,
   };
   gameStats: GameStats = this.gameSt;
-  gameStatsSub: Subscription = new Subscription();
 
   game: Game = this.gm;
-  gameSub: Subscription = new Subscription();
 
   playersGuest: Player[] = [];
-  playersGuestSubs: Subscription = new Subscription();
+  playersGuestView: Player[] | null = [];
 
   playersHome: Player[] = [];
-  playersHomeSubs: Subscription = new Subscription();
+  playersHomeView: Player[] | null = [];
+
 
   winningTeam: string = '';
   constructor(
@@ -65,12 +64,12 @@ export class OverallStatsPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.gameStatsSub = this.gameService.gameStats.subscribe((gameSt) => {
+    this.gameService.gameStats.subscribe((gameSt) => {
       this.gameStats = gameSt;
       this.winningTeam = this.gameService.getWinnigTeam();
     });
 
-    this.gameSub = this.gameService.game.subscribe((game) => {
+    this.gameService.game.subscribe((game) => {
       this.game = game;
     });
 
@@ -81,8 +80,13 @@ export class OverallStatsPage implements OnInit {
     this.playerService.playersGuest.subscribe((players) => {
       this.playersGuest = players;
     });
+  
+    this.playersGuestView = this.playersGuest.filter(
+      (player) => player.selected
+    );
+    this.playersHomeView = this.playersHome.filter((player) => player.selected);
 
-    console.log("Pobednik je: " + this.winningTeam);
+    console.log('Pobednik je: ' + this.winningTeam);
   }
 
   goHome() {

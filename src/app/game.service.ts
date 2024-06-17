@@ -20,8 +20,8 @@ export class GameService {
 
   private gameCode: string = '';
   private teams: { home: Team; guest: Team } = {
-    home: { teamID: '', name: '', players: null },
-    guest: { teamID: '', name: '', players: null },
+    home: { teamID: '', name: '', players: null, isActive: true},
+    guest: { teamID: '', name: '', players: null, isActive: true},
   };
 
   gameSt: GameStats = {
@@ -333,10 +333,11 @@ export class GameService {
 
   saveGame() {
     const gameToSave = this.gameSubject.value;
+    console.log("Cuva se igra " + gameToSave);
     let id: string;
     return this.http
       .post<{ name: string }>(
-        'https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game.json',
+        'https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games.json',
         gameToSave
       )
       .pipe(
@@ -366,7 +367,7 @@ export class GameService {
   getGameFromDB() {
     return this.http
       .get<{ [key: string]: Game }>(
-        'https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game.json'
+        'https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games.json'
       )
       .pipe(
         map((responseData) => {
@@ -406,8 +407,8 @@ export class GameService {
       date: new Date(),
       homePoints: this.homePointsSubject.value,
       guestPoints: this.guestPointsSubject.value,
-      home: { teamID: '', name: '', players: null },
-      guest: { teamID: '', name: '', players: null },
+      home: { teamID: '', name: '', players: null, isActive: true},
+      guest: { teamID: '', name: '', players: null, isActive: true },
       stats: null,
     };
 
@@ -430,7 +431,7 @@ export class GameService {
     console.log('upd' + this.gameSubject.value.home.name);
     return this.http
       .put<Game>(
-        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${gameID}.json`,
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games/${gameID}.json`,
         this.gameSubject.value
       )
       .pipe(
@@ -443,19 +444,18 @@ export class GameService {
   deleteGame() {
     return this.http
       .delete<void>(
-        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${this.gameSubject.value.id}.json`
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games/${this.gameSubject.value.id}.json`
       )
       .pipe(
         tap(() => {
-          // Ažurirajte BehaviorSubject na null ili neku praznu vrednost nakon brisanja
           this.gameSubject.next({
             id: '',
             gameCode: '',
             date: new Date(),
             homePoints: 0,
             guestPoints: 0,
-            home: { teamID: '', name: '', players: null },
-            guest: { teamID: '', name: '', players: null },
+            home: { teamID: '', name: '', players: null, isActive: true},
+            guest: { teamID: '', name: '', players: null, isActive: true },
             stats: null,
           });
           console.log(
@@ -468,7 +468,7 @@ export class GameService {
   getGameStatsFromDB(gameID: string) {
     return this.http
       .get<{ [key: string]: any }>(
-        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${gameID}/stats.json`
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games/${gameID}/stats.json`
       )
       .pipe(
         map((responseData: { [key: string]: any }) => {
@@ -518,7 +518,7 @@ export class GameService {
   saveGameStatsToDB(gameStats: GameStats) {
     return this.http
       .post<{ name: string }>(
-        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${this.gameSubject.value.id}/stats.json`,
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games/${this.gameSubject.value.id}/stats.json`,
         gameStats
       )
       .pipe(
@@ -542,7 +542,7 @@ export class GameService {
     const gameID = this.gameSubject.value.id;
     return this.http
       .put<GameStats>(
-        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${gameID}/stats.json`,
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games/${gameID}/stats.json`,
         this.gameStatsSubject.value
       )
       .pipe(
@@ -555,7 +555,7 @@ export class GameService {
   deleteGameStats() {
     return this.http
       .delete<void>(
-        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${this.gameSubject.value.id}/stats.json`
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games/${this.gameSubject.value.id}/stats.json`
       )
       .pipe(
         tap(() => {

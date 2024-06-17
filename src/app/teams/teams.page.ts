@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Team } from '../team.model';
 import { GameService } from '../game.service';
+import { TeamsService } from '../teams.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-teams',
@@ -9,53 +11,67 @@ import { GameService } from '../game.service';
   styleUrls: ['./teams.page.scss'],
 })
 export class TeamsPage implements OnInit {
-  home: string = '';
-  guest: string = '';
+  homeTeam: Team | null = null;
+  guestTeam: Team | null = null;
+  activeTeams: Team[] = [];
 
-  constructor(private router: Router, private gameService: GameService) {}
+  constructor(
+    private router: Router,
+    private gameService: GameService,
+    private teamsService: TeamsService,
+    private alertController: AlertController
+  ) {}
+
+  async presentAlert(message: string) {
+    const alert = await this.alertController.create({
+      header: 'Greška',
+      message: message,
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+  }
 
   onAddTeams() {
-    if (this.home.length >= 3 && this.guest.length >= 3) {
+    if (this.homeTeam && this.guestTeam && this.homeTeam !== this.guestTeam) {
       console.log('Id igre str tim' + this.gameService.getGame().id);
       console.log(this.gameService.getGame());
-      console.log('Domaci vs Gosti', this.home, this.guest);
-      const homeTeam: Team = { teamID: 'home', name: this.home, players: null };
-      const guestTeam: Team = { teamID: 'guest', name: this.guest, players: null };
+      console.log('Domaci vs Gosti', this.homeTeam.name, this.guestTeam.name);
 
-
-      const currentHomeTeam = this.gameService.getTeam('home');
-      const currentGuestTeam = this.gameService.getTeam('guest');
-
-      if (
-        currentHomeTeam &&
-        currentHomeTeam.name === this.home &&
-        currentGuestTeam &&
-        currentGuestTeam.name === this.guest
-      ) {
-        console.log('Timovi su već postavljeni.');
-      } else {
-        if (currentHomeTeam) {
-          this.gameService.setTeam('home', homeTeam);
-          console.log("home" + this.gameService.getTeam('home'));
-        }
-        console.log("izmedju");
-        if (currentGuestTeam) {
-          this.gameService.setTeam('guest', guestTeam);
-          console.log('guwst' + this.gameService.getTeam('guest'));
-        }
+      // const currentHomeTeam = this.gameService.getTeam('home');
+      // const currentGuestTeam = this.gameService.getTeam('guest');
+      // if (
+      //   currentHomeTeam &&
+      //   currentHomeTeam.name === this.homeTeam.name &&
+      //   currentGuestTeam &&
+      //   currentGuestTeam.name === this.guestTeam.name
+      // ) {
+      //   console.log('Timovi su već postavljeni.');
+      // } else {
+        console.log(this.homeTeam);
+        console.log(this.guestTeam);
+        this.gameService.setTeam('home', this.homeTeam);
+        this.gameService.setTeam('guest', this.guestTeam);
 
         this.gameService.updateGame().subscribe();
-      }
+      // }
 
       this.router.navigateByUrl('/players-home');
-    } else if (this.home.length <= 3) {
-      console.log('Ime domaćina mora da ima više od 3 karaktera');
-    } else if (this.guest.length <= 3) {
-      console.log('Ime gosta mora da ima više od 3 karaktera');
+    } else {
+      if (!this.homeTeam || !this.guestTeam) {
+        this.presentAlert('Morate da izaberete oba tima.');
+        console.log('Morate da izaberete oba tima.');
+      } else if (this.homeTeam === this.guestTeam) {
+        this.presentAlert('Morate da izaberete različite timove.');
+        console.log('Morate da izaberete različite timove.');
+      }
     }
   }
 
   ngOnInit() {
-    // console.log("Id igre" + this.gameService.getGame().id);
+    this.teamsService.getActiveTeamsFromDB().subscribe();
+    this.teamsService.teams.subscribe((teams) => {
+      this.activeTeams = teams;
+    });
   }
 }

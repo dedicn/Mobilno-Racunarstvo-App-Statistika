@@ -3,8 +3,8 @@ export class User {
     public id: string,
     public email: string,
     private _token: string,
-    private tokenExpirationDate: Date,
-    private role: string
+    public tokenExpirationDate: Date,
+    public role: string
   ) {}
 
   get token() {
@@ -12,5 +12,9 @@ export class User {
       return null;
     }
     return this._token;
+  }
+
+  get exparation() {
+    return this.tokenExpirationDate;
   }
 }

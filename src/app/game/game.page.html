@@ -81,22 +81,22 @@
   </div>
 
   <p>Domaci</p>
-  <div>
-    <ion-list >
-    <ion-item *ngFor="let player of playersHome; let i = index">
-      <app-player  [index] = "i+1" [player] = "player" style="width: 100%;" (playerClicked)="openPlayerModal(player, 'home')"></app-player>
+<div>
+  <ion-list>
+    <ion-item *ngFor="let player of playersHomeView; let i = index">
+      <app-player [index]="i + 1" [player]="player" style="width: 100%;" (playerClicked)="openPlayerModal(player, 'home')"></app-player>
     </ion-item>
   </ion-list>
-  </div>
+</div>
 
-  <p>Gosti</p>
-  <div>
-    <ion-list>
-    <ion-item *ngFor="let player of playersGuest; let i = index">
-      <app-player [index] = "i+1" [player] = "player" style="width: 100%;" (playerClicked)="openPlayerModal(player, 'guest')"></app-player>
+<p>Gosti</p>
+<div>
+  <ion-list>
+    <ion-item *ngFor="let player of playersGuestView; let i = index">
+      <app-player [index]="i + 1" [player]="player" style="width: 100%;" (playerClicked)="openPlayerModal(player, 'guest')"></app-player>
     </ion-item>
   </ion-list>
-  </div>
+</div>
 
   <div style="margin-top: 15px;">
     <ion-button (click)="confirmeDeliteGame()">Obriši utakmicu</ion-button>

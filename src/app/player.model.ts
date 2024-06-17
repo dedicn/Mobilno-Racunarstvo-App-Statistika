@@ -6,5 +6,6 @@ export interface Player {
   name: string;
   surname: string;
   number: number | null;
+  selected: boolean;
   stats: PlayerStats | null;
 }

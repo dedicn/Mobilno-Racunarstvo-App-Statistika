@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title style="color: black; font-size: 25px;">Admin</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logOut()"> Izloguj se</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="height: 60px; display: flex; align-items: center; justify-content: center;">
+      <strong>
+      Odaberite opciju koju želite
+    </strong>
+  </div>
+
+  <div class="adminbuttons">
+        <div class="adminBut" style=" height: 250px; width: 90%; background-color: rgb(245, 96, 96);" (click)="gotToAdminTeams()">
+          <p>Timovi</p>
+          <img style="border-radius: 11em;" src="https://cdn2.iconfinder.com/data/icons/basketball-elements-3/64/Team-human-man-sport-basketball-512.png" alt="">
+        </div>
+        <div class="adminBut" style=" height: 250px; width: 90%; background-color: rgb(216, 137, 46);" (click)="gotToAdminPlayers()">
+          <p>Igraci</p>
+          <img style="border-radius: 11em;" src="https://icon2.cleanpng.com/20240411/hbx/transparent-basketball-silhouette-basketball-player-dribbling-basketball-player-dribbling-on-black-background66186f6f57faa0.71304767.webp" alt="">
+        </div>
+        <div class="adminBut" style=" height: 250px; width: 90%;" (click)="gotToAdminStats()">
+          <p>Statisticari</p>
+          <img style="border-radius: 11em;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJbxOIdZ33v3UZxR7lsjmg2vl2p3bFNRJMft0c8j0DUc_GaGqjce7cGYIDMd8SbI4_IF8&usqp=CAU" alt="">
+        </div>
+  </div>
+</ion-content>

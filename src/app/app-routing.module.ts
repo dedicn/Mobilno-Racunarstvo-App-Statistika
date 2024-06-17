@@ -37,13 +37,6 @@ const routes: Routes = [
       import('./game/game.module').then((m) => m.GamePageModule),
   },
   {
-    path: 'instruction',
-    loadChildren: () =>
-      import('./instruction/instruction.module').then(
-        (m) => m.InstructionPageModule
-      ),
-  },
-  {
     path: 'overall-stats',
     loadChildren: () =>
       import('./overall-stats/overall-stats.module').then(
@@ -54,6 +47,22 @@ const routes: Routes = [
     path: 'log-in',
     loadChildren: () =>
       import('./auth/log-in/log-in.module').then((m) => m.LogInPageModule),
+  },
+  {
+    path: 'admin-home',
+    loadChildren: () => import('./admin/admin-home/admin-home.module').then( m => m.AdminHomePageModule)
+  },
+  {
+    path: 'admin-teams',
+    loadChildren: () => import('./admin/admin-teams/admin-teams.module').then( m => m.AdminTeamsPageModule)
+  },
+  {
+    path: 'admin-players',
+    loadChildren: () => import('./admin/admin-players/admin-players.module').then( m => m.AdminPlayersPageModule)
+  },
+  {
+    path: 'admin-stats',
+    loadChildren: () => import('./admin/admin-stats/admin-stats.module').then( m => m.AdminStatsPageModule)
   },
 ];
 

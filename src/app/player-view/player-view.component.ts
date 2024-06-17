@@ -28,6 +28,7 @@ export class PlayerViewComponent implements OnInit {
     name: '',
     surname: '',
     number: 0,
+    selected: false,
     stats: this.gameStats,
   };
   @Output() deletePlayer = new EventEmitter<void>();

@@ -1,0 +1,59 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/log-in"></ion-back-button>
+    </ion-buttons>
+    <ion-title style="color: black; font-size: 25px;">Igraci</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center">
+  <form (ngSubmit)="onAddPlayer(playerForm)" #playerForm="ngForm" class="player-form">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+          <ion-item>
+            <ion-label>Izaberi tim</ion-label>
+            <ion-select [(ngModel)]="selectedTeam" name="selectedTeam" (ngModelChange)="onTeamChange($event, playerForm)">
+              <ion-select-option *ngFor="let team of teams" [value]="team">{{ team.name }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="floating">Ime</ion-label>
+            <ion-input type="text" [(ngModel)]="player.name" name="name" required></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="floating">Prezime</ion-label>
+            <ion-input type="text" [(ngModel)]="player.surname" name="surname" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="floating">Broj Dresa</ion-label>
+            <ion-input type="number" [(ngModel)]="player.number" name="number" required></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6" class="ion-align-self-center">
+          <ion-button type="submit" color="primary" [disabled]="!playerForm.valid">Dodaj</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+
+  <ion-list *ngIf="selectedTeam && players.length">
+    <ion-item *ngFor="let player of players">
+      <app-player-view style="width: 100%;" [players]="player" (deletePlayer)="onDeletePlayer(player)"></app-player-view>
+    </ion-item>
+  </ion-list>
+  <ion-item *ngIf="selectedTeam && !players.length">
+    Nema igraca za taj tim.
+  </ion-item>
+</ion-content>

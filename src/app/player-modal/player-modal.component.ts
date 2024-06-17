@@ -43,6 +43,7 @@ export class PlayerModalComponent implements OnInit {
     id: '',
     name: '',
     surname: '',
+    selected:false,
     number: 0,
     stats: {
       fauls: 0,
@@ -166,7 +167,7 @@ export class PlayerModalComponent implements OnInit {
         this.presentAlert();
         return;
       }
-
+      console.log("da se updatuje " + this.player.stats);
       this.playerService.updatePlayerStats(this.player, this.teamType);
 
       this.playerService

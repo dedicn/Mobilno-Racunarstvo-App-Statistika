@@ -25,6 +25,7 @@ export class PlayerComponent implements OnInit {
     name: '',
     surname: '',
     number: 0,
+    selected: false,
     stats: this.gameStats,
   };
   @Input() index: number = 1;

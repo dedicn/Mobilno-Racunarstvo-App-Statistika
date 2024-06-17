@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Izmena tima</ion-title>
+    <ion-buttons slot="end">
+      <ion-button id="dugme" (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center">
+  <form #editTeamForm="ngForm" (ngSubmit)="onSubmit(editTeamForm)">
+    <ion-item>
+      <ion-label position="floating">Ime tima</ion-label>
+      <ion-input type="text" name="name" [(ngModel)]="team.name"></ion-input>
+    </ion-item>
+    <ion-footer>
+      <ion-button type="submit">Sacuvaj</ion-button>
+    </ion-footer>
+  </form>
+</ion-content>
+

@@ -1,0 +1,52 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/log-in"></ion-back-button>
+    </ion-buttons>
+    <ion-title style="color: black; font-size: 25px;">Timovi</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="margin-bottom: 20px;">
+    <form (ngSubmit)="onAddTeam(teamForm)" #teamForm="ngForm">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="8">
+          <ion-item>
+            <ion-label position="floating">Ime tima</ion-label>
+            <ion-input 
+            type="text" 
+            name="newTeam.name"
+            minlength="5"
+            ngModel
+            name="teamsName"
+            #teamsName="ngModel"
+            required>
+          </ion-input>
+          </ion-item>
+          <ion-item lines="none" *ngIf="teamsName.invalid && teamsName.touched">
+              <ion-label>Ime mora da sadrži minimalno 5 karaketra</ion-label>
+            </ion-item>
+        </ion-col>
+        <ion-col size="4" class="ion-align-self-center">
+          <ion-button 
+          type="submit" 
+          color="primary" 
+          [disabled]="!teamForm.valid"
+          >
+          Dodaj
+        </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let team of activeTeams">
+      <app-teams-view style="width: 100%;" [team]="team" (deleteTeam)="onDeleteTeam(team)" (editTeam)="onEditTeam(team)"></app-teams-view>
+      <!-- <app-player-view style="width: 100%;" [players]="player" (deletePlayer)="onDeletePlayer(player)"></app-player-view> -->
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,106 @@
+.custom-class {
+  font-family: Arial, Verdana, sans-serif;
+}
+
+:root{
+  --ion-color-light: #ffffff;
+	
+}
+
+
+img{
+  height: 200px;
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+strong{
+  font-size: 25px;
+  line-height: 35px;
+  color: black;
+}
+ion-content{
+  --background: #ffff;
+}
+
+ion-toolbar {
+    --background: #ffff;
+}
+
+ion-col{
+    --background: #ffff;
+}
+
+ion-item {
+  --background: #ffff;
+  color: black;
+  font-size: 22px;
+}
+
+ion-progress-bar{
+    --background: #adaaaa;
+}
+
+ion-title{
+    color: black;
+}
+
+.adminbuttons{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.adminBut{
+    background-color: rgb(17, 158, 240);
+    border-radius: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.adminBut p{
+    font-size: 30px;
+    color: black;
+    margin-left: 18px;
+}
+
+.adminBut img{
+    width: 60%;
+    height: 190px;
+    margin-right: 10px;
+    margin-top: 50px;
+}
+
+ion-label {
+  font-size: 24px;
+  margin-bottom: 15px;
+  text-align: center;
+  width: 100%;
+  color: black;
+  background-color: #ffff;
+}
+
+ion-input {
+  padding-top: 10px;
+  margin-top: 10px;
+  font-size: 24px;
+}
+
+ion-button {
+  font-size: 24px;
+}
+
+.welcome{
+  margin-top: 190px;
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+

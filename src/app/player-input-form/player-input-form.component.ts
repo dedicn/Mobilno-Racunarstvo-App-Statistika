@@ -27,6 +27,7 @@ export class PlayerInputFormComponent {
     name: '',
     surname: '',
     number: null,
+    selected: false,
     stats: null,
   };
   maxPlayers: number = 4;

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth-service.service';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ViewDidEnter } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -9,40 +9,44 @@ import { NgForm } from '@angular/forms';
   templateUrl: './log-in.page.html',
   styleUrls: ['./log-in.page.scss'],
 })
-export class LogInPage implements OnInit {
+export class LogInPage implements OnInit, ViewDidEnter {
   constructor(
     private authService: AuthService,
     private router: Router,
     private alertCtrl: AlertController
   ) {}
+  ionViewDidEnter(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('isAdmin');
+    localStorage.removeItem('savedCodeGame');
+  }
 
   isAdmin: boolean = false;
+  isLoading = false;
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   onLogIn(logInForm: NgForm) {
+    
     console.log(logInForm);
-    const role = this.isAdmin ? "admin" : "user";
+    const role = this.isAdmin ? 'admin' : 'user';
     if (logInForm.valid) {
+      this.isLoading = true;
       this.authService.logIn(logInForm.value, role).subscribe({
         next: (resData) => {
-          if(this.isAdmin){
-            //TODO: dodaj da se cuva u localstorage-u
-            this.router.navigateByUrl('/quotes/tabs/explore');
-          }else{
+          this.isLoading = false;
+          localStorage.setItem('token', resData.idToken);
+          if (this.isAdmin) {
+            this.router.navigateByUrl('/admin-home');
+          } else {
             this.router.navigateByUrl('/home');
           }
-          
+          logInForm.reset();
         },
         error: async (errRes) => {
+          this.isLoading = false;
           let message = 'Netačan email ili lozinka!';
-
-          // const code = errRes.error.error.message;
-          // if (code === 'EMAIL_NOT_FOUND') {
-          //     message = 'Email address could not be found.';
-          // } else if (code === 'INVALID_PASSWORD') {
-          //     message = 'This password is not correct.';
-          // }
 
           const alert = await this.alertCtrl.create({
             header: 'Autentifikacija neuspela',
@@ -56,7 +60,7 @@ export class LogInPage implements OnInit {
     }
   }
 
-  changeToAdmin(){
+  changeToAdmin() {
     this.isAdmin = !this.isAdmin;
   }
 }

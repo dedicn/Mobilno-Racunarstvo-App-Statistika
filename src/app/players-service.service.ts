@@ -4,7 +4,6 @@ import { Player } from './player.model';
 import { HttpClient } from '@angular/common/http';
 import { tap, catchError, map, take } from 'rxjs/operators';
 import { GameService } from './game.service';
-import { resetFakeAsyncZone } from '@angular/core/testing';
 
 @Injectable({
   providedIn: 'root',
@@ -64,7 +63,6 @@ export class PlayerService {
       updatedPlayers = [...players];
     }
 
-    // Pronalazak igrača po više parametara
     const playerIndex = updatedPlayers.findIndex(
       (p) =>
         p.name === player.name &&
@@ -101,8 +99,8 @@ export class PlayerService {
           return playersArray;
         }),
         tap((players) => {
-          const homeTeamID = this.gameService.getTeam('home').name;
-          const guestTeamID = this.gameService.getTeam('guest').name;
+          // const homeTeamID = this.gameService.getTeam('home').name;
+          // const guestTeamID = this.gameService.getTeam('guest').name;
 
           // const homePlayers = players.filter(
           //   (player) => player.team.name === homeTeamID
@@ -123,17 +121,17 @@ export class PlayerService {
     const gameId = this.gameService.getGame().id;
     console.log(`${gameId} od igre`);
 
-    const playerToSave = { ...player }; // kreiraj kopiju objekta kako bi izbegao neželjene izmene
+    const playerToSave = { ...player }; 
     console.log(`${player.name} ${player.surname} od igre`);
 
     return this.http
       .post<{ name: string }>(
-        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${gameId}/${team}/players.json`,
+        `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games/${gameId}/${team}/players.json`,
         playerToSave
       )
       .pipe(
         map((response) => {
-          playerToSave.id = response.name; // ažuriramo ID igrača sa vrednošću vraćenom iz Firebase
+          playerToSave.id = response.name;
           return playerToSave;
         }),
         take(1),
@@ -175,8 +173,11 @@ export class PlayerService {
   }
 
   updatePlayerInDB(playerID: string, updatedPlayer: Player, team: string) {
+    console.log(team);
+    console.log(playerID)
+    console.log(updatedPlayer.stats);
     return this.http.put(
-      `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${
+      `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games/${
         this.gameService.getGame().id
       }/${team}/players/${playerID}.json`,
       updatedPlayer
@@ -187,7 +188,7 @@ export class PlayerService {
     console.log('brisnaje igraca sa id:  ' + playerID);
     console.log(team);
     return this.http.delete(
-      `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${
+      `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games/${
         this.gameService.getGame().id
       }/${team}/players/${playerID}.json`
     );
@@ -198,34 +199,32 @@ export class PlayerService {
     const playersGuest = this.playersGuestSubject.value;
     let id = this.gameService.getGame().id;
 
-    // Kreiramo zahteve za brisanje za svakog igrača
-    const deleteRequests: Observable<any>[] = playersHome.map(
+    playersHome.map(
       (player: Player) => {
         return this.http.delete(
-          `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${id}/home/${player.id}.json`
+          `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games/${id}/home/${player.id}.json`
         );
       }
     );
 
-    const deleteRequestsG: Observable<any>[] = playersGuest.map(
+    playersGuest.map(
       (player: Player) => {
         return this.http.delete(
-          `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/game/${id}/guest/${player.id}.json`
+          `https://statistics-3x3-default-rtdb.europe-west1.firebasedatabase.app/games/${id}/guest/${player.id}.json`
         );
       }
     );
 
     this.playersHomeSubject.next([]);
     this.playersGuestSubject.next([]);
+  }
 
-    // deleteRequests[...]
-    // // Koristimo forkJoin da pošaljemo sve zahteve za brisanje istovremeno
-    // return forkJoin(deleteRequests).pipe(
-    //   tap(() => {
-    //     // Nakon uspešnog brisanja, osvežavamo BehaviorSubject-ove
-    //     this.playersHomeSubject.next([]);
-    //     this.playersGuestSubject.next([]);
-    //   })
-    // );
+
+  setPlayers(team: "home" | "guest", players:Player[]){
+    if(team === "home"){
+      this.playersHomeSubject.next(players);
+    }else{
+      this.playersGuestSubject.next(players);
+    }
   }
 }

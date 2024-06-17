@@ -17,9 +17,9 @@
           <h2 style="margin-left: 5px;">Domaci tim: {{game.home.name}}</h2>
         </div>
         <ion-list>
-          <ion-item *ngFor="let player of playersHome">
+          <ion-item *ngFor="let player of playersHomeView">
             <ion-label>
-              <h2>#{{player.number}} {{ player.name }} {{ player.surname }}</h2>
+              <h2 style="color: black;">#{{player.number}} {{ player.name }} {{ player.surname }}</h2>
 
               <div class="stats">
                 <div>
@@ -45,7 +45,7 @@
           <h2 style="margin-left: 5px;">Gostujuci tim: {{game.guest.name}}</h2>
         </div>
         <ion-list>
-          <ion-item *ngFor="let player of playersGuest">
+          <ion-item *ngFor="let player of playersGuestView">
             <ion-label>
               <h2>#{{player.number}} {{ player.name }} {{ player.surname }}</h2>
               <div class="stats">

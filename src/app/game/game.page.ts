@@ -56,9 +56,11 @@ export class GamePage implements OnInit {
 
   // { name: 'neko', surname: 'neko', number: 2 }
   playersGuest: Player[] = [];
+  playersGuestView: Player[] |null = [];
   playersHomeSubs: Subscription = new Subscription();
 
   playersHome: Player[] = [];
+  playersHomeView: Player[] |null= [];
   playersGuestSubs: Subscription = new Subscription();
 
   constructor(
@@ -69,7 +71,7 @@ export class GamePage implements OnInit {
     private router: Router
   ) {}
 
-  async presentAlert(tema: "home" | "guest") {
+  async presentAlert(tema: 'home' | 'guest') {
     const name = this.gameService.getTeam(tema).name;
     const alert = await this.alertCtrl.create({
       header: 'Greška',
@@ -166,9 +168,9 @@ export class GamePage implements OnInit {
 
   addTO(teamType: 'home' | 'guest') {
     if (teamType === 'home' && this.gameStats.TOHome >= 1) {
-      this.presentAlert("home");
+      this.presentAlert('home');
     } else if (teamType === 'guest' && this.gameStats.TOGuest >= 1) {
-      this.presentAlert("guest");
+      this.presentAlert('guest');
     } else {
       this.gameService.addTO(teamType);
     }
@@ -183,13 +185,13 @@ export class GamePage implements OnInit {
       this.guestPoints = points;
     });
 
-    this.playersGuestSubs = this.playerService.playersGuest.subscribe(
+    this.playerService.playersGuest.subscribe(
       (players) => {
         this.playersGuest = players;
       }
     );
 
-    this.playersHomeSubs = this.playerService.playersHome.subscribe(
+    this.playerService.playersHome.subscribe(
       (players) => {
         this.playersHome = players;
       }
@@ -199,7 +201,32 @@ export class GamePage implements OnInit {
       this.gameStats = gameStat;
     });
 
-    this.gameService.setPlayersForTeam(this.playersHome, 'home');
-    this.gameService.setPlayersForTeam(this.playersGuest, 'guest');
+    this.playersGuestView = this.gameService.getTeam('guest').players;
+    const playersObj = this.playersGuestView as unknown;
+    if (typeof playersObj === 'object' && playersObj !== null) {
+      this.playersGuest = Object.keys(playersObj).map(
+        (key) => (playersObj as Record<string, Player>)[key]
+      );
+    }
+    this.playersHomeView = this.gameService.getTeam('home').players;
+    const playersObjH = this.playersHomeView as unknown;
+    if (typeof playersObjH === 'object' && playersObjH !== null) {
+      this.playersHome = Object.keys(playersObjH).map(
+        (key) => (playersObjH as Record<string, Player>)[key]
+      );
+    }
+
+    this.playersGuestView = this.playersGuest.filter(
+      (player) => player.selected
+    );
+    this.playersHomeView = this.playersHome.filter((player) => player.selected);
+    console.log(this.playersGuest);
+    console.log(this.playersHome);
+    
+
+    console.log(this.playersGuestView);
+    console.log(this.playersHomeView);
+    // this.gameService.setPlayersForTeam(this.playersHome, 'home');
+    // this.gameService.setPlayersForTeam(this.playersGuest, 'guest');
   }
 }

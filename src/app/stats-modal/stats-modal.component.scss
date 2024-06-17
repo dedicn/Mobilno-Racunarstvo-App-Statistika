@@ -1,0 +1,51 @@
+.button-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+ion-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-around; 
+}
+
+ion-col {
+  flex: 1;
+  display: flex;
+  justify-content: center; 
+}
+
+ion-button {
+  width: 200px;
+  height: 40px; 
+  margin: 5px; 
+  text-align: center;
+  font-size: 20px;
+  margin-top: 30px;
+}
+
+#dugme{
+    width: 40px;
+    height: 40px;
+    margin: 0;
+}
+
+ion-toolbar{
+    --background: #fff;
+}
+
+ion-title{
+    color: #000;
+    font-size: 18px;
+}
+
+
+ion-content{
+    --background: #fff;
+}
+
+ion-item{
+    --background: #fff;
+    color: #000;
+    font-size: 20px;
+}

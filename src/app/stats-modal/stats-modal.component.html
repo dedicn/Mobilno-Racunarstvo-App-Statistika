@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Izmena statisticara</ion-title>
+    <ion-buttons slot="end">
+      <ion-button id="dugme" (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center">
+  <p style="color: black; font-size: 24px;">Email statisticara:</p>
+  <p style="color: black; font-size: 24px;">{{originalStat.email}}</p>
+  <form #editTeamForm="ngForm" (ngSubmit)="onSubmit(editTeamForm)">
+    <ion-item>
+      <ion-label position="floating">Ime</ion-label>
+      <ion-input type="text" name="name" [(ngModel)]="originalStat.name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Prezime</ion-label>
+      <ion-input type="text" name="surname" [(ngModel)]="originalStat.surname"></ion-input>
+    </ion-item>
+    <ion-footer>
+      <ion-button type="submit">Sacuvaj</ion-button>
+    </ion-footer>
+  </form>
+</ion-content>
+

@@ -1,0 +1,32 @@
+
+.player {
+  display: flex;
+  background-color: #a59f9f;
+  justify-content: space-between; 
+  align-items: center; 
+  width: 100%; 
+}
+
+.components {
+  flex: 1; 
+  text-align: center;
+}
+
+ion-button {
+  margin-left: 7px;
+  font-size: 20px;
+}
+
+.componennts p{
+    font-size: 20px;
+}
+
+ion-item{
+    --background: #a59f9f;
+    border-radius: .5em;
+    margin-bottom: 10px;
+}
+
+ion-button{
+    font-size: 20px;
+}
