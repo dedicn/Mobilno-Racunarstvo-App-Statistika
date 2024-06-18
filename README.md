@@ -23,19 +23,19 @@ Prvo, klonirajte repozitorijum na vaš lokalni računar koristeći sledeću koma
 
 ```bash
 https://github.com/dedicn/Mobilno-Racunarstvo-App-Statistika.git
-
+```
 Potom je potrebno da se navigirate u projekat aplikacije
 ```bash
 cd statistics-app
-
+```
 Da bi aplikacija mogla da se pokrene neophodno je da se instalitaju svi paketi, to se radi sa sledećom komandom
 ```bash
 npm install
-
+```
 Kad je sve instalitano aplikacije se može pokrenuti sa
 ```bash
 ionic serve
-
+```
 Aplikacija će biti pokrenuta na url "http://localhost:8100" u okviru vašeg web pretraživača
 
  
